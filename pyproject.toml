@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "setuptools_scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "my-project"
+name = "traffic_scene_renderer"
 requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
@@ -12,3 +12,20 @@ dependencies = [
 
 # Enables the usage of setuptools_scm
 [tool.setuptools_scm]
+
+[project.optional-dependencies]
+lint = [
+]
+test = [
+]
+doc = [
+]
+build = [
+]
+dev = [
+    "tox",
+    "traffic_scene_renderer[lint]",
+    "traffic_scene_renderer[test]",
+    "traffic_scene_renderer[doc]",
+    "traffic_scene_renderer[build]",
+]
