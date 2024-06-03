@@ -3,6 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
+from .path_follower import PathFollower
 from .static_objects import (
     Building,
     BuildingOptions,
