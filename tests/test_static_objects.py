@@ -10,7 +10,15 @@ import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from traffic_scene_renderer import MaxSpeed, MaxSpeedOptions, TurnArrow, TurnArrowOptions
+from traffic_scene_renderer import (
+    Building,
+    MaxSpeed,
+    MaxSpeedOptions,
+    Stripes,
+    StripesOptions,
+    TurnArrow,
+    TurnArrowOptions,
+)
 
 
 def save_fig(figure: Figure, axes: Axes, filename: Path, fwidth: float = 10) -> None:
@@ -58,3 +66,37 @@ def test_creation_of_all_turn_arrows() -> None:
         )
         turn_arrow.change_pos(i * 3, 3, np.pi)
     save_fig(fig, axes, Path("static_objects") / "turn_arrows.png", 10)
+
+
+def test_building_creation() -> None:
+    fig, axes = plt.subplots()
+    axes.set_xlim(-2, 2)
+    axes.set_ylim(-2, 2)
+    Building(axes)
+    save_fig(fig, axes, Path("static_objects") / "building.png", 2)
+
+
+def test_stripes_creation() -> None:
+    fig, axes = plt.subplots()
+    axes.set_xlim(-2, 2)
+    axes.set_ylim(-2, 2)
+    Stripes(axes, options=StripesOptions(width=0.5, length=3.5, nstripes=20))
+    save_fig(fig, axes, Path("static_objects") / "stripes.png", 3)
+
+
+def test_stripes_change_colors() -> None:
+    fig, axes = plt.subplots()
+    axes.set_xlim(-2, 2)
+    axes.set_ylim(-2, 2)
+    stripes = Stripes(axes, options=StripesOptions(width=0.5, length=3.5))
+    stripes.change_color(face_color=(0, 0, 0), edge_color=(1, 0, 0), face_color2=(1, 1, 0))
+    save_fig(fig, axes, Path("static_objects") / "stripes_different_color.png", 3)
+
+
+def test_stripes_rotate() -> None:
+    fig, axes = plt.subplots()
+    axes.set_xlim(-2, 2)
+    axes.set_ylim(-2, 2)
+    stripes = Stripes(axes, options=StripesOptions(width=0.5, length=3.5))
+    stripes.change_pos(0, 0, np.pi / 2)
+    save_fig(fig, axes, Path("static_objects") / "stripes_rotated.png", 3)
