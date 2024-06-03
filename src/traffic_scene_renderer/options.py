@@ -27,7 +27,7 @@ class Options:
 
     __isfrozen = False
 
-    def __init__(self, **kwargs: int) -> None:
+    def __init__(self, **kwargs: Any) -> None:  # noqa: ANN401  # Allow Any
         """Create class for dealing with options.
 
         :param kwargs: define all options that need to be set.
