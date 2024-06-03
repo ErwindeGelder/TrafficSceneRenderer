@@ -77,11 +77,12 @@ convention = "google"
 disallow_untyped_defs = true # Functions need to be annotated
 warn_unused_ignores = true
 exclude = [
-    "my-project-\\d+", # Ignore temporary folder created by setuptools when building an sdist
+    "traffic_scene_renderer-\\d+", # Ignore temporary folder created by setuptools when building an sdist
     "venv.*/",
     "build/",
     "dist/",
 ]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = """
