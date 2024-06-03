@@ -3,44 +3,43 @@
 Author(s): Erwin de Gelder
 """
 
-from traffic_scene_renderer.options import Options, UnknownOptionError, FrozenOptionsError
+import contextlib
+
+from traffic_scene_renderer.options import FrozenOptionsError, Options, UnknownOptionError
 
 
 class OptionsTest(Options):
     """Class to test the functionality of Options."""
+
     test: bool = True
 
 
-def test_options():
+def test_options() -> None:
     """Test the normal functionality of Options."""
     # Create object with no options
     my_options = OptionsTest(test=False)
 
     # We can add an option when we unfreeze the object
     my_options.unfreeze()
-    my_options.test = "hi world"
+    my_options.test = False
 
 
-def test_unknown_option_error():
+def test_unknown_option_error() -> None:
     """Test whether the UnknownOptionError is being raised.
 
     Create an object and try to add an option that is not valid.
     This should raise an UnknownOptionError.
     """
-    try:
-        my_options = Options(test=True)
-    except UnknownOptionError:
-        pass
+    with contextlib.suppress(UnknownOptionError):
+        Options(test=True)
 
 
-def test_frozen_options_error():
+def test_frozen_options_error() -> None:
     """Test whether the FrozenOptionsError is being raised.
 
     Create an object and then try to add an option that is not valid.
     This should raise an FrozenOptionsError.
     """
     my_options = OptionsTest()
-    try:
+    with contextlib.suppress(FrozenOptionsError):
         my_options.test_me_too = True
-    except FrozenOptionsError:
-        pass
