@@ -3,4 +3,4 @@
 Author(s): Erwin de Gelder
 """
 
-from .vertex import Vertex
+from .vertex import Vertex, VertexOptions
