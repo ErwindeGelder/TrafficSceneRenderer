@@ -217,7 +217,7 @@ class TurnArrow(StaticObject):
 
         :param axes: The axes on which the turning arrow is supposed to be drawn.
         :param direction: Choose between 'through' (default), 'left', 'right', 'leftright',
-                         'leftthrough', 'throughright', and 'through'
+                         'leftthrough', and 'throughright'.
         :param options: Additional options for the turning arrow (see TurnArrowOptions).
         """
         self.options = TurnArrowOptions() if options is None else options
