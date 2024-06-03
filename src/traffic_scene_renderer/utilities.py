@@ -3,14 +3,15 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Tuple
-import utm  # Installation required (pip install utm)
+from typing import Optional, Tuple
+
 import numpy as np
+import utm  # Installation required (pip install utm)
 
 
 def wgs_to_utm(
-    points_wgs: np.ndarray, force_zone_number: int = None
-) -> Tuple[np.ndarray, int, str]:
+    points_wgs: np.ndarray, force_zone_number: Optional[int] = None
+) -> Tuple[np.ndarray, Optional[int], str]:
     """Convert WGS coordinates to UTM coordinates, such that zone is similar.
 
     :param points_wgs: N-by-2 array containing N lat-lon coordinates.
@@ -19,12 +20,11 @@ def wgs_to_utm(
     :return: A tuple with a N-by-2 array containing N easting-northing coordinates, an integer
              of the zone used for transformation, and the character of the zone.
     """
-
     n_points = points_wgs.shape[0]
     points_utm = np.empty((n_points, 2))
     zone_char = "U"  # Make sure it is defined
 
-    for i in range(0, n_points):
+    for i in range(n_points):
         point_utm = utm.from_latlon(
             points_wgs[i, 0], points_wgs[i, 1], force_zone_number=force_zone_number
         )
@@ -50,22 +50,6 @@ def rotate(x_data: np.ndarray, y_data: np.ndarray, angle: float) -> Tuple[np.nda
     return x_new, y_new
 
 
-def set_options(default: dict, options: dict) -> dict:
-    """Set options or keep default options if option is not specified.
-
-    :param default: The default options.
-    :param options: The set options. Can be None, in that case, default is returned.
-    :return: All options.
-    """
-    if options is not None:
-        for key, value in options.items():
-            if key in default:
-                default[key] = value
-            else:
-                raise KeyError("Option '{:s}' not defined for this object.".format(key))
-    return default
-
-
 def rgb2hsl(red: float, green: float, blue: float) -> Tuple[float, float, float]:
     """Convert RGB color format to HSL color format.
 
@@ -88,11 +72,7 @@ def rgb2hsl(red: float, green: float, blue: float) -> Tuple[float, float, float]
         hue = ((red - green) / (2 * delta) + 2) / 3
 
     luminance = (cmax + cmin) / 2
-
-    if delta == 0.0:
-        saturation = 0.0
-    else:
-        saturation = delta / (1 - abs(2 * luminance - 1))
+    saturation = 0.0 if delta == 0.0 else delta / (1 - abs(2 * luminance - 1))
 
     return hue, saturation, luminance
 
