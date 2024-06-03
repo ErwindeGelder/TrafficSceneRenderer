@@ -14,9 +14,7 @@ class OptionsTest(Options):
     test: bool = True
 
 
-def test_options() -> None:
-    """Test the normal functionality of Options."""
-    # Create object with no options
+def test_normal_functionality_options() -> None:
     my_options = OptionsTest(test=False)
 
     # We can add an option when we unfreeze the object
@@ -25,21 +23,13 @@ def test_options() -> None:
 
 
 def test_unknown_option_error() -> None:
-    """Test whether the UnknownOptionError is being raised.
-
-    Create an object and try to add an option that is not valid.
-    This should raise an UnknownOptionError.
-    """
+    # Create an Options object and try to add an option that is not valid.
     with contextlib.suppress(UnknownOptionError):
         Options(test=True)
 
 
 def test_frozen_options_error() -> None:
-    """Test whether the FrozenOptionsError is being raised.
-
-    Create an object and then try to add an option that is not valid.
-    This should raise an FrozenOptionsError.
-    """
+    # Create an Options object and then try to add an option that is not valid.
     my_options = OptionsTest()
     with contextlib.suppress(FrozenOptionsError):
         my_options.test_me_too = True
