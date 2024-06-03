@@ -1,6 +1,9 @@
 .idea/
+.tox/
 build/
 reports/
 src/traffic_scene_renderer.egg-info/
 tests/__pycache__/
+tests/created_images/
 venv/
+%LOCALAPPDATA%/
