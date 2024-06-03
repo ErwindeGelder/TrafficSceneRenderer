@@ -7,6 +7,7 @@ name = "traffic_scene_renderer"
 requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
+    "matplotlib",
     "numpy",
     "utm"
 ]
@@ -30,6 +31,7 @@ build = [
 ]
 dev = [
     "tox",
+    "tox-pyenv-redux",
     "traffic_scene_renderer[lint]",
     "traffic_scene_renderer[test]",
     "traffic_scene_renderer[doc]",
