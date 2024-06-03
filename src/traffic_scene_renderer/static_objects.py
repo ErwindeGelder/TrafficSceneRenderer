@@ -491,4 +491,4 @@ class Stripes(StaticObject):
             self.plots[0].set_color(edge_color)
         if face_color2 is not None:
             for fill in self.fills[1:]:
-                fill.set_facecolor(face_color)
+                fill.set_facecolor(face_color2)
