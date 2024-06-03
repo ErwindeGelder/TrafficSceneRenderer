@@ -3,7 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
-import contextlib
+import pytest
 
 from traffic_scene_renderer.options import FrozenOptionsError, Options, UnknownOptionError
 
@@ -24,12 +24,20 @@ def test_normal_functionality_options() -> None:
 
 def test_unknown_option_error() -> None:
     # Create an Options object and try to add an option that is not valid.
-    with contextlib.suppress(UnknownOptionError):
+    try:
         Options(test=True)
+    except UnknownOptionError:
+        pass
+    else:
+        pytest.fail("UnknownOptionError should be raised.")
 
 
 def test_frozen_options_error() -> None:
     # Create an Options object and then try to add an option that is not valid.
     my_options = OptionsTest()
-    with contextlib.suppress(FrozenOptionsError):
+    try:
         my_options.test_me_too = True
+    except FrozenOptionsError:
+        pass
+    else:
+        pytest.fail("FrozenOptionsError should be raised.")
