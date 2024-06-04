@@ -16,3 +16,4 @@ from .static_objects import (
     TurnArrowOptions,
 )
 from .vertex import Vertex, VertexOptions
+from .way import Way, WayOptions
