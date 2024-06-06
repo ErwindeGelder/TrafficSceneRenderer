@@ -3,6 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
+from .bus import Bus, BusOptions
 from .car import Car, CarOptions, CarType
 from .path_follower import PathFollower
 from .static_objects import (
