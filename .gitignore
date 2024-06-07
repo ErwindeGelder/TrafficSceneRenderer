@@ -1,8 +1,11 @@
+.coverage
 .idea/
 .tox/
+.vs/
 build/
 reports/
 src/traffic_scene_renderer.egg-info/
+src/traffic_scene_renderer/__pycache__/
 tests/__pycache__/
 tests/created_images/
 venv/
