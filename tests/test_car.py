@@ -9,9 +9,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 
-from traffic_scene_renderer import Car, CarOptions, CarType, PathFollower
-from traffic_scene_renderer.car import InvalidCarTypeError
-from traffic_scene_renderer.vehicle import MoveVehicleNoPathFollowerDefinedError
+from traffic_scene_renderer import (
+    Car,
+    CarOptions,
+    CarType,
+    InvalidCarTypeError,
+    MoveVehicleNoPathFollowerDefinedError,
+    PathFollower,
+)
 
 from .test_static_objects import save_fig
 
