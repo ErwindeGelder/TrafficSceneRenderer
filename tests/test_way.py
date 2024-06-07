@@ -11,7 +11,7 @@ import numpy as np
 import pytest
 from matplotlib.axes import Axes
 
-from traffic_scene_renderer import Crossing, Vertex, Way, WayOptions, IndexInsertVertexError
+from traffic_scene_renderer import Crossing, IndexInsertVertexError, Vertex, Way, WayOptions
 
 from .test_static_objects import save_fig
 
@@ -167,7 +167,6 @@ def plot_way_with_offset(axes: Axes, y_orig: int, offset: Union[float, List[floa
     way.options.side_color = (0, 0, 0)
     way.options.line_color = (0, 0, 0)
     plot_way(axes, way)
-    plt.close()
 
 
 def test_apply_offset() -> None:
