@@ -30,6 +30,7 @@ def save_fig(figure: Figure, axes: Axes, filename: Path, fwidth: float = 10) -> 
     figure.set_size_inches([fwidth, fwidth * (ylim[1] - ylim[0]) / (xlim[1] - xlim[0])])
     axes.set_axis_off()
     figure.savefig(filename, bbox_inches="tight")
+    plt.close()
 
 
 def test_max_speed_creation() -> None:
