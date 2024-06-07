@@ -278,7 +278,7 @@ class Way:
         if index < 0:
             index += len(self.ivs)
         if index == 0 or abs(index) >= len(self.ivs):
-            raise IndexInsertVertexError(index, len(self.ivs)-1)
+            raise IndexInsertVertexError(index, len(self.ivs) - 1)
         self.vertices.insert(index, vertex)
         self.ivs.insert(index, vertex.idx)
         dist1 = np.hypot(
