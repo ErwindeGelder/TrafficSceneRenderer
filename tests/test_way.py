@@ -11,7 +11,7 @@ import numpy as np
 import pytest
 from matplotlib.axes import Axes
 
-from traffic_scene_renderer import Vertex, Way, WayOptions
+from traffic_scene_renderer import Crossing, Vertex, Way, WayOptions, IndexInsertVertexError
 
 from .test_static_objects import save_fig
 
@@ -102,7 +102,7 @@ def test_insert_and_pop_vertex() -> None:
     vertex_left = Vertex(0, -10, 6)
     vertex_right = Vertex(1, 10, 6)
     way = Way([vertex_left, vertex_right], WayOptions(line_color=(0, 0, 0)))
-    way.insert_vertex(Vertex(2, 0, 5), 1)
+    assert way.insert_vertex(Vertex(2, 0, 5), 1) == (False, False)
     way.process()
     plot_way(axes, way)
     way.pop_vertex(1)
@@ -111,6 +111,37 @@ def test_insert_and_pop_vertex() -> None:
     way.process()  # Reprocessing is necessary.
     plot_way(axes, way)
     save_fig(fig, axes, Path("way") / "insert_and_pop_vertex.png", 10)
+
+
+def test_insert_vertex_in_between_crossing() -> None:
+    vertices = [
+        Vertex(0, -10, 0),
+        Vertex(1, 0, 0),
+        Vertex(2, 0, 10),
+        Vertex(3, 10, 0),
+        Vertex(4, 10, 10),
+        Vertex(5, 20, 0),
+    ]
+    ways = [
+        Way([vertices[0], vertices[1]]),
+        Way([vertices[1], vertices[2]]),
+        Way([vertices[3], vertices[1]]),
+        Way([vertices[3], vertices[4]]),
+        Way([vertices[3], vertices[5]]),
+    ]
+    Crossing(0, vertices[1], ways[:3])
+    Crossing(1, vertices[3], ways[2:])
+    assert ways[2].insert_vertex(Vertex(6, 5, 1), 1) == (True, True)
+
+
+def test_insert_vertex_invalid_index_error() -> None:
+    way = Way([Vertex(0, 0, 0), Vertex(1, 10, 0)])
+    try:
+        way.insert_vertex(Vertex(2, 5, 0), -2)
+    except IndexInsertVertexError:
+        pass
+    else:
+        pytest.fail("IndexInsertVertexError should be raised.")
 
 
 def test_set_nlanes() -> None:
@@ -201,3 +232,8 @@ def test_compute_position_markers() -> None:
     assert northing[1] == pytest.approx(0.0)
     assert angle[0] == pytest.approx(np.pi / 2)
     assert angle[1] == pytest.approx(np.pi / 2)
+
+
+def test_non_unique_vertex_ids() -> None:
+    with pytest.warns(UserWarning):
+        Way([Vertex(0, 0, 0), Vertex(0, 10, 0)])
