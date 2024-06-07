@@ -5,7 +5,7 @@ Author(s): Erwin de Gelder
 
 import pytest
 
-from traffic_scene_renderer.options import FrozenOptionsError, Options, UnknownOptionError
+from traffic_scene_renderer import FrozenOptionsError, Options, UnknownOptionError
 
 
 class OptionsTest(Options):
