@@ -49,6 +49,8 @@ def test_invalid_car_type_error() -> None:
         pass
     else:
         pytest.fail("InvalidCarTypeError should be raised.")
+    finally:
+        plt.close()
 
 
 def test_car_change_color() -> None:
@@ -67,6 +69,7 @@ def test_car_get_coordinates() -> None:
     assert car.get_front_y() == 1.0
     assert car.get_rear_x() == 0.0
     assert car.get_rear_y() == -1.0
+    plt.close()
 
 
 def test_car_set_front_xy() -> None:
@@ -74,6 +77,7 @@ def test_car_set_front_xy() -> None:
     car = Car(axes, CarOptions(length=2))
     car.set_front_xy(1, 0, np.pi / 2)
     assert (car.get_front_x(), car.get_front_y()) == (1.0, 0.0)
+    plt.close()
 
 
 def test_car_braking() -> None:
@@ -103,6 +107,8 @@ def test_move_vehicle_no_path_follower_defined_error() -> None:
         pass
     else:
         pytest.fail("MoveVehicleNoPathFollowerDefinedError should be raised.")
+    finally:
+        plt.close()
 
 
 def test_car_moving() -> None:
@@ -111,3 +117,4 @@ def test_car_moving() -> None:
     car = Car(axes, path_follower=path_follower)
     car.move_vehicle(car.options.length)
     assert car.get_rear_y() == car.options.length
+    plt.close()

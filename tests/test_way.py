@@ -167,6 +167,7 @@ def plot_way_with_offset(axes: Axes, y_orig: int, offset: Union[float, List[floa
     way.options.side_color = (0, 0, 0)
     way.options.line_color = (0, 0, 0)
     plot_way(axes, way)
+    plt.close()
 
 
 def test_apply_offset() -> None:
@@ -198,6 +199,7 @@ def test_warning_markers_vs_nr_of_lanes() -> None:
     way = Way([Vertex(0, -10, 0), Vertex(1, 10, 0)], WayOptions(turnlanes="through", nlanes=2))
     with pytest.warns(UserWarning):
         way.plot_markers(axes)
+    plt.close()
 
 
 def test_get_n_markers_without_xy_data() -> None:
