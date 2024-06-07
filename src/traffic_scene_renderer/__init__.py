@@ -3,6 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
+from .bus import Bus, BusOptions
 from .car import Car, CarOptions, CarType, InvalidCarTypeError
 from .crossing import Crossing, CrossingOptions
 from .options import FrozenOptionsError, Options, UnknownOptionError
