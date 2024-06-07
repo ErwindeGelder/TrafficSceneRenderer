@@ -207,6 +207,14 @@ class WayParameters(Options):
         Options.__init__(self, **kwargs)
 
 
+class IndexInsertVertexError(Exception):
+    """Error to be raised in case the index of where to insert a vertex is invalid."""
+
+    def __init__(self, index: int, maxindex: int) -> None:
+        """Description of error."""
+        super().__init__(f"Index should be in range 1 to {maxindex}, but is {index}'.")
+
+
 class Way:
     """A way of a road network.
 
@@ -226,8 +234,16 @@ class Way:
         self.options = WayOptions() if options is None else options
         self.vertices = vertices
 
-        # Make list of indices of the vertices
+        # Make list of indices of the vertices.
         self.ivs = [v.idx for v in self.vertices]
+
+        # Check if vertices have a unique ID.
+        if len(self.ivs) != len(set(self.ivs)):
+            warnings.warn(
+                "The ID of the vertices of this way are not unique. "
+                "This may lead to strange results.",
+                stacklevel=2,
+            )
 
         self.parms = WayParameters()
         self.parms.offset = [0.0 for _ in self.ivs]  # Offset per node, right is positive.
@@ -256,10 +272,13 @@ class Way:
         :return: Two booleans, tellings whether the start or end crossings need to be processed
                  again.
         """
-        # Convert index to a positive number on the interval [0, len(self.ivs)).
+        # Convert index to a positive number on the interval [0, len(self.ivs)-1).
         # This is done, such that the index refers to the index that the new vertex will have
         # (this is not the case if index=-1).
-        index = np.mod(index, len(self.ivs)).astype(int)
+        if index < 0:
+            index += len(self.ivs)
+        if index == 0 or abs(index) >= len(self.ivs):
+            raise IndexInsertVertexError(index, len(self.ivs)-1)
         self.vertices.insert(index, vertex)
         self.ivs.insert(index, vertex.idx)
         dist1 = np.hypot(
@@ -277,9 +296,9 @@ class Way:
         )
         process_start_again = False
         process_end_again = False
-        if index % len(self.ivs) == 1 and self.parms.crossing.i_start >= 0:
+        if index == 1 and self.parms.crossing.i_start >= 0:
             process_start_again = True
-        if index % len(self.ivs) == len(self.ivs) - 1 and self.parms.crossing.i_end >= 0:
+        if index == len(self.ivs) - 2 and self.parms.crossing.i_end >= 0:
             process_end_again = True
         return process_start_again, process_end_again
 
