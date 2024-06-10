@@ -5,6 +5,7 @@ Author(s): Erwin de Gelder
 
 from pathlib import Path
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.axes import Axes
@@ -20,6 +21,8 @@ from traffic_scene_renderer import (
     TurnArrowOptions,
 )
 
+mpl.use("Agg")
+
 
 def save_fig(figure: Figure, axes: Axes, filename: Path, fwidth: float = 10) -> None:
     filename = Path("tests") / "created_images" / filename
@@ -30,7 +33,7 @@ def save_fig(figure: Figure, axes: Axes, filename: Path, fwidth: float = 10) -> 
     figure.set_size_inches([fwidth, fwidth * (ylim[1] - ylim[0]) / (xlim[1] - xlim[0])])
     axes.set_axis_off()
     figure.savefig(filename, bbox_inches="tight")
-    plt.close()
+    plt.close(figure)
 
 
 def test_max_speed_creation() -> None:

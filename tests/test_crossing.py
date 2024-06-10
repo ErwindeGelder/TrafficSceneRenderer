@@ -5,6 +5,7 @@ Author(s): Erwin de Gelder
 
 from pathlib import Path
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
@@ -15,6 +16,8 @@ from traffic_scene_renderer.crossing import correct_angle
 
 from .test_static_objects import save_fig
 from .test_way import plot_way
+
+mpl.use("Agg")
 
 
 def plot_crossing(axes: Axes, *crossings: Crossing) -> None:
@@ -158,7 +161,7 @@ def test_warning_zebra_no_2_footways() -> None:
     crossing.parms.zebra = True
     with pytest.warns(UserWarning):
         crossing.plot_zebra(axes)
-    plt.close()
+    plt.close(fig)
 
 
 def test_warning_zebra_no_2_roadways() -> None:
@@ -173,7 +176,7 @@ def test_warning_zebra_no_2_roadways() -> None:
     crossing.parms.zebra = True
     with pytest.warns(UserWarning):
         crossing.plot_zebra(axes)
-    plt.close()
+    plt.close(fig)
 
 
 def test_correct_angle() -> None:
