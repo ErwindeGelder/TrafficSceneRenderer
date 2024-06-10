@@ -6,14 +6,17 @@ Author(s): Erwin de Gelder
 from pathlib import Path
 from typing import List, Union
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 from matplotlib.axes import Axes
 
-from traffic_scene_renderer import Crossing, IndexInsertVertexError, Vertex, Way, WayOptions
+from traffic_scene_renderer import Crossing, IndexVertexError, Vertex, Way, WayOptions
 
 from .test_static_objects import save_fig
+
+mpl.use("Agg")
 
 
 def plot_way(axes: Axes, way: Way) -> None:
@@ -105,7 +108,7 @@ def test_insert_and_pop_vertex() -> None:
     assert way.insert_vertex(Vertex(2, 0, 5), 1) == (False, False)
     way.process()
     plot_way(axes, way)
-    way.pop_vertex(1)
+    assert way.pop_vertex(1) == (False, False)
     vertex_left.ycoordinate = -5
     vertex_right.ycoordinate = -5
     way.process()  # Reprocessing is necessary.
@@ -113,7 +116,7 @@ def test_insert_and_pop_vertex() -> None:
     save_fig(fig, axes, Path("way") / "insert_and_pop_vertex.png", 10)
 
 
-def test_insert_vertex_in_between_crossing() -> None:
+def test_insert_and_pop_vertex_in_between_crossing() -> None:
     vertices = [
         Vertex(0, -10, 0),
         Vertex(1, 0, 0),
@@ -132,13 +135,50 @@ def test_insert_vertex_in_between_crossing() -> None:
     Crossing(0, vertices[1], ways[:3])
     Crossing(1, vertices[3], ways[2:])
     assert ways[2].insert_vertex(Vertex(6, 5, 1), 1) == (True, True)
+    assert ways[2].pop_vertex(1) == (True, True)
 
 
-def test_insert_vertex_invalid_index_error() -> None:
+def test_warning_lambda() -> None:
+    vertices = [
+        Vertex(0, -10, 0),
+        Vertex(1, 0, 0),
+        Vertex(2, 0, 10),
+        Vertex(3, 1, 0),
+        Vertex(4, 10, 0),
+        Vertex(5, 20, 10),
+        Vertex(6, 20, 0),
+    ]
+    ways = [
+        Way([vertices[0], vertices[1]]),
+        Way([vertices[1], vertices[2]]),
+        Way([vertices[1], vertices[3], vertices[4]]),
+        Way([vertices[4], vertices[5]]),
+        Way([vertices[4], vertices[6]]),
+    ]
+    crossing1 = Crossing(0, vertices[1], ways[:3])
+    crossing2 = Crossing(1, vertices[4], ways[2:])
+    crossing1.process()
+    crossing2.process()
+    with pytest.warns(UserWarning):
+        ways[2].get_xy()
+    vertices[3].xcoordinate = 9
+    crossing1.process()
+    crossing2.process()
+    with pytest.warns(UserWarning):
+        ways[2].get_xy()
+
+
+def test_vertex_invalid_index_error() -> None:
     way = Way([Vertex(0, 0, 0), Vertex(1, 10, 0)])
     try:
         way.insert_vertex(Vertex(2, 5, 0), -2)
-    except IndexInsertVertexError:
+    except IndexVertexError:
+        pass
+    else:
+        pytest.fail("IndexInsertVertexError should be raised.")
+    try:
+        way.pop_vertex(0)
+    except IndexVertexError:
         pass
     else:
         pytest.fail("IndexInsertVertexError should be raised.")
@@ -198,7 +238,7 @@ def test_warning_markers_vs_nr_of_lanes() -> None:
     way = Way([Vertex(0, -10, 0), Vertex(1, 10, 0)], WayOptions(turnlanes="through", nlanes=2))
     with pytest.warns(UserWarning):
         way.plot_markers(axes)
-    plt.close()
+    plt.close(fig)
 
 
 def test_get_n_markers_without_xy_data() -> None:
