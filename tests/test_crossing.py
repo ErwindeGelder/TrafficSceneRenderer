@@ -1,4 +1,4 @@
-"""Scripts for testing car.py.
+"""Scripts for testing crossing.py.
 
 Author(s): Erwin de Gelder
 """
