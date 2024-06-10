@@ -20,4 +20,4 @@ from .static_objects import (
 )
 from .vehicle import MoveVehicleNoPathFollowerDefinedError
 from .vertex import Vertex, VertexOptions
-from .way import IndexInsertVertexError, Way, WayOptions
+from .way import IndexVertexError, Way, WayOptions

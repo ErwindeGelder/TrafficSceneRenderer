@@ -207,8 +207,8 @@ class WayParameters(Options):
         Options.__init__(self, **kwargs)
 
 
-class IndexInsertVertexError(Exception):
-    """Error to be raised in case the index of where to insert a vertex is invalid."""
+class IndexVertexError(Exception):
+    """Error to be raised in case the index of the vertex is invalid."""
 
     def __init__(self, index: int, maxindex: int) -> None:
         """Description of error."""
@@ -278,7 +278,7 @@ class Way:
         if index < 0:
             index += len(self.ivs)
         if index == 0 or abs(index) >= len(self.ivs):
-            raise IndexInsertVertexError(index, len(self.ivs) - 1)
+            raise IndexVertexError(index, len(self.ivs) - 1)
         self.vertices.insert(index, vertex)
         self.ivs.insert(index, vertex.idx)
         dist1 = np.hypot(
@@ -305,13 +305,16 @@ class Way:
     def pop_vertex(self, index: int) -> Tuple[bool, bool]:
         """Remove a vertex from this road.
 
-        Note that this vertex cannot be at the start or at the end of the way. This
-        function will not throw an error, but very strange behavior might be expected.
+        Note that this vertex cannot be at the start or at the end of the way.
 
         :param index: Index of vertex to be removed.
         :return: Two booleans, tellings whether the start or end crossings need to be processed
                  again.
         """
+        # Check if index is correct.
+        if index == 0 or abs(index) >= len(self.ivs)-1:
+            raise IndexVertexError(index, len(self.ivs)-1)
+
         # Check if crossing needs to be processed again. This is the case when the vertex
         # is used for constructing the crossing (i.e. the second or second-last vertex).
         process_start_again = False
@@ -342,7 +345,7 @@ class Way:
             )
             if lamb > 1:
                 warnings.warn(
-                    "Lambda > 1, this will result in faulty roads! " f"(lambda = {lamb:.2f})",
+                    f"Lambda > 1, this will result in faulty roads! (lambda = {lamb:.2f})",
                     stacklevel=2,
                 )
             xy_data[0] = xy_data[0] + lamb * (xy_data[1] - xy_data[0])
@@ -350,7 +353,7 @@ class Way:
             lamb = max(self.parms.crossing.end_lambda_left, self.parms.crossing.end_lambda_right)
             if lamb > 1:
                 warnings.warn(
-                    "Lambda > 1, this will result in faulty roads! " f"(lambda = {lamb:.2f})",
+                    f"Lambda > 1, this will result in faulty roads! (lambda = {lamb:.2f})",
                     stacklevel=2,
                 )
             xy_data[-1] = xy_data[-1] + lamb * (xy_tmp - xy_data[-1])
