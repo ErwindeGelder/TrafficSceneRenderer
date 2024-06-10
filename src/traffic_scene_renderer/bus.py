@@ -83,7 +83,10 @@ class Bus(Vehicle):
         self.options: BusOptions
 
     def _determine_color2(self) -> Tuple[float, float, float]:
-        """If defined, just return color2. If not, return lighter version of color."""
+        """If defined, just return color2. If not, return lighter version of color.
+
+        :return: RGB tuple of color.
+        """
         if self.options.color2 is None:
             hue, saturation, luminance = rgb2hsl(*self.options.color)
             luminance = min(1.0, max(0.0, luminance + self.options.luminance_diff))
@@ -239,5 +242,5 @@ class Bus(Vehicle):
         # Note that these have a slight different color.
         if face_color is not None:
             self.options.color = face_color
-            for fill in self.fills[3:5]:
-                fill.set_facecolor(self._determine_color2(), force=True)
+            for fill in self.fills[2:4]:
+                fill.set_facecolor_forced(self._determine_color2())
