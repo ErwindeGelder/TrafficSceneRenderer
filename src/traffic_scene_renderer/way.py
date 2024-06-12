@@ -312,8 +312,8 @@ class Way:
                  again.
         """
         # Check if index is correct.
-        if index == 0 or abs(index) >= len(self.ivs)-1:
-            raise IndexVertexError(index, len(self.ivs)-1)
+        if index == 0 or abs(index) >= len(self.ivs) - 1:
+            raise IndexVertexError(index, len(self.ivs) - 1)
 
         # Check if crossing needs to be processed again. This is the case when the vertex
         # is used for constructing the crossing (i.e. the second or second-last vertex).
@@ -672,8 +672,8 @@ def apply_offset(xy_data: np.ndarray, offset: Union[float, List[float]]) -> np.n
     else:
         off = np.ones(xy_data.shape[0]) * offset
 
-    direction = np.array(np.zeros_like(xy_data))
-    xy_new = np.array(np.zeros_like(xy_data))
+    direction = np.zeros_like(xy_data)
+    xy_new = np.zeros_like(xy_data)
     for i in range(xy_data.shape[0]):
         direction[i, :] = xy_data[max(i, 1), :] - xy_data[max(i - 1, 0), :]
         direction[i, :] /= np.sqrt(np.dot(direction[i, :], direction[i, :]))
