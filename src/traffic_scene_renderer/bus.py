@@ -82,7 +82,7 @@ class Bus(Vehicle):
         Vehicle.__init__(self, axes, options, path_follower)
         self.options: BusOptions
 
-    def _determine_color2(self) -> Tuple[float, float, float]:
+    def determine_color2(self) -> Tuple[float, float, float]:
         """If defined, just return color2. If not, return lighter version of color.
 
         :return: RGB tuple of color.
@@ -160,7 +160,7 @@ class Bus(Vehicle):
                     self.axes,
                     (xdata - xoffset) / xscale * self.options.width,
                     -(ydata - yoffset) / yscale * self.options.length,
-                    facecolor=self._determine_color2(),
+                    facecolor=self.determine_color2(),
                     edgecolor=self.options.edgecolor,
                     zorder=self.options.layer,
                     fixed_color=True,
@@ -243,4 +243,4 @@ class Bus(Vehicle):
         if face_color is not None:
             self.options.color = face_color
             for fill in self.fills[2:4]:
-                fill.set_facecolor_forced(self._determine_color2())
+                fill.set_facecolor_forced(self.determine_color2())
