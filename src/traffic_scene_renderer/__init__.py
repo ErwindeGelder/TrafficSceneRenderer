@@ -8,6 +8,7 @@ from .bus import Bus, BusOptions
 from .car import Car, CarOptions, CarType, InvalidCarTypeError
 from .connection import Connection, InvalidConnectionError
 from .crossing import Crossing, CrossingOptions
+from .letters import Letter, LetterOptions, Letters, LettersOptions
 from .options import FrozenOptionsError, Options, UnknownOptionError
 from .path_follower import PathFollower
 from .static_objects import (
