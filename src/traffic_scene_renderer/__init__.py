@@ -3,6 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
+from .ambulance import Ambulance, AmbulanceOptions
 from .bus import Bus, BusOptions
 from .car import Car, CarOptions, CarType, InvalidCarTypeError
 from .connection import Connection, InvalidConnectionError
