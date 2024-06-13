@@ -19,6 +19,7 @@ from .static_objects import (
     TurnArrow,
     TurnArrowOptions,
 )
+from .truck import Truck, TruckOptions
 from .vehicle import MoveVehicleNoPathFollowerDefinedError
 from .vertex import Vertex, VertexOptions
 from .way import IndexVertexError, Way, WayOptions
