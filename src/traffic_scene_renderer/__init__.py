@@ -21,6 +21,7 @@ from .static_objects import (
     TurnArrow,
     TurnArrowOptions,
 )
+from .traffic_light import NoAmberError, TrafficLight, TrafficLightOptions, TrafficLightStatus
 from .truck import Truck, TruckOptions
 from .vehicle import MoveVehicleNoPathFollowerDefinedError
 from .vertex import Vertex, VertexOptions
