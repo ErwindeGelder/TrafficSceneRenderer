@@ -11,6 +11,13 @@ from .crossing import Crossing, CrossingOptions
 from .letters import Letter, LetterOptions, Letters, LettersOptions
 from .options import FrozenOptionsError, Options, UnknownOptionError
 from .path_follower import PathFollower
+from .road_network import (
+    CrossingInfo,
+    RoadNetwork,
+    RoadNetworkNoAxesError,
+    RoadNetworkOptions,
+    StopLineOptions,
+)
 from .static_objects import (
     Building,
     BuildingOptions,
