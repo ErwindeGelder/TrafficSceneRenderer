@@ -32,7 +32,7 @@ def save_fig(figure: Figure, axes: Axes, filename: Path, fwidth: float = 10) -> 
     ylim = axes.get_ylim()
     figure.set_size_inches([fwidth, fwidth * (ylim[1] - ylim[0]) / (xlim[1] - xlim[0])])
     axes.set_axis_off()
-    figure.savefig(filename, bbox_inches="tight")
+    figure.savefig(filename, bbox_inches="tight", pad_inches=0.0, facecolor=axes.get_facecolor())
     plt.close(figure)
 
 
