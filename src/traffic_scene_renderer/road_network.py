@@ -52,14 +52,6 @@ class RoadNetworkOptions(Options):
     marker_fill_color: Tuple[float, float, float] = (1, 1, 1)
 
 
-class RoadNetworkNoAxesError(Exception):
-    """Error in case there are no axes for the road network yet."""
-
-    def __init__(self) -> None:
-        """Description of error."""
-        super().__init__("There is no axes yet. Make sure to first call RoadNetwork.plot().")
-
-
 class RoadNetworkParameters(Options):
     """Parameters for a road network."""
 
@@ -68,7 +60,7 @@ class RoadNetworkParameters(Options):
     ) -> None:
         """Initialize the parameters for a road network."""
         self.ivs: List[int] = []
-        self.axes: Axes = None
+        self.figure, self.axes = plt.subplots(1, 1, figsize=(15, 7))
         self.traffic_lights: List[TrafficLight] = []
         self.turn_arrows: List[TurnArrow] = []
         self.mat_edges: np.ndarray = np.array([])
@@ -243,7 +235,6 @@ class RoadNetwork:
 
         :return: plot handle.
         """
-        figure, self.parms.axes = plt.subplots(1, 1, figsize=(15, 7))
         self.parms.axes.set_facecolor(self.options.face_color)
 
         # Plot the crossings
@@ -287,7 +278,7 @@ class RoadNetwork:
                 )
             way.plot_markers(self.parms.axes)
 
-        return figure, self.parms.axes
+        return self.parms.figure, self.parms.axes
 
     def find_crossing(self, way: Way) -> Union[CrossingInfo, None]:
         """Find a crossing that is connected to the given way.
@@ -328,8 +319,6 @@ class RoadNetwork:
             stoplineoptions = StopLineOptions()
         if not stoplineoptions.stopline:
             return False
-        if self.parms.axes is None:
-            raise RoadNetworkNoAxesError
         if info is None:
             info = self.find_crossing(way)
             if info is None:
@@ -444,7 +433,7 @@ class RoadNetwork:
         options: Optional[TrafficLightOptions] = None,
         stoplineoptions: Optional[StopLineOptions] = None,
     ) -> List[TrafficLight]:
-        """Add the traffic lights. It is only possible to call this function after plot().
+        """Add the traffic lights. It is only useful to call this function after plot().
 
         It will add traffic lights on both sides of a way, if a way is connected to a
         crossing and the way contains lane information through the turnlanes field.
@@ -455,7 +444,7 @@ class RoadNetwork:
         :param stoplineoptions: Options for stopline. If none provided, no stopline is added.
         :return: List of traffic lights that have been added.
         """
-        traffic_lights = []
+        traffic_lights: List[TrafficLight] = []
         if leftright is None or (leftright[0] and leftright[1]):
             location = [False, True]
         elif leftright[0]:
@@ -464,8 +453,6 @@ class RoadNetwork:
             location = [True]
         else:
             return traffic_lights
-        if self.parms.axes is None:
-            raise RoadNetworkNoAxesError
         ways = self.ways if crossing is None else crossing.ways
         for way in ways:
             info = self.find_crossing(way)
