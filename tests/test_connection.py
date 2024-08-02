@@ -142,7 +142,7 @@ def test_check_crossing_reprocessing() -> None:
         Way([vertices[1], vertices[3]]),
         Way([vertices[3], vertices[4]]),
         Way([vertices[4], vertices[5]]),
-        Way([vertices[5], vertices[6]]),
+        Way([vertices[4], vertices[6]]),
     ]
     crossing1 = Crossing(10, vertices[1], ways[:3])
     crossing2 = Crossing(20, vertices[4], ways[3:])

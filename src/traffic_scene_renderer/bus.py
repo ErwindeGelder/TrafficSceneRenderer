@@ -243,4 +243,5 @@ class Bus(Vehicle):
         if face_color is not None:
             self.options.color = face_color
             for fill in self.fills[2:4]:
-                fill.set_facecolor_forced(self.determine_color2())
+                if isinstance(fill, Polygon):
+                    fill.set_facecolor_forced(self.determine_color2())

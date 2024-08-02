@@ -42,8 +42,8 @@ class Polygon:
         """
         self.xdata = xdata
         self.ydata = ydata
-        patch = patches.Polygon(np.array([xdata, ydata]).T, **kwargs)
-        self.patch = axes.add_patch(patch)
+        self.patch = patches.Polygon(np.array([xdata, ydata]).T, **kwargs)
+        axes.add_patch(self.patch)
         self.fixed_color = fixed_color
 
     def get_xdata(self) -> np.ndarray:
@@ -130,3 +130,7 @@ class Polygon:
         """
         if not self.fixed_color:
             self.patch.set_edgecolor(color)
+
+    def remove(self) -> None:
+        """Remove the patch."""
+        self.patch.remove()

@@ -153,7 +153,6 @@ class WayCrossing(Options):
     start_lambda_right: float = 0
     end_lambda_left: float = 0
     end_lambda_right: float = 0
-    part_of_big: bool = False
 
 
 class XYData(Options):

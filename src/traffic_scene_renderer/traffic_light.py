@@ -197,7 +197,7 @@ class TrafficLight(StaticObject):
         self.plot_idle()
         self.status = TrafficLightStatus.RED
         xdata, ydata = self.signal_data(self.status)
-        self.plots = self.axes.plot(xdata, ydata, color=self.options.red_color)
+        self.plots = (self.axes.plot(xdata, ydata, color=self.options.red_color)[0],)
         if self.options.amber:
             self.fills[2].set_color(self.options.amber_idle_color)
             self.fills[3].set_color(self.options.green_idle_color)
@@ -213,7 +213,7 @@ class TrafficLight(StaticObject):
         self.plot_idle()
         self.status = TrafficLightStatus.AMBER
         xdata, ydata = self.signal_data(self.status)
-        self.plots = self.axes.plot(xdata, ydata, color=self.options.amber_color)
+        self.plots = (self.axes.plot(xdata, ydata, color=self.options.amber_color)[0],)
         self.fills[1].set_color(self.options.red_idle_color)
         self.fills[3].set_color(self.options.green_idle_color)
         self.set_position()
@@ -224,7 +224,7 @@ class TrafficLight(StaticObject):
         self.plot_idle()
         self.status = TrafficLightStatus.GREEN
         xdata, ydata = self.signal_data(self.status)
-        self.plots = self.axes.plot(xdata, ydata, color=self.options.green_color)
+        self.plots = (self.axes.plot(xdata, ydata, color=self.options.green_color)[0],)
         self.fills[1].set_color(self.options.red_idle_color)
         if self.options.amber:
             self.fills[2].set_color(self.options.amber_idle_color)
