@@ -9,10 +9,11 @@ from typing import Dict, Optional, Tuple, Union
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
-from matplotlib.patches import Polygon
+from matplotlib.patches import Polygon as PPolygon
 from matplotlib.text import Text
 
 from .options import Options
+from .polygon import Polygon
 from .utilities import rotate
 
 
@@ -36,7 +37,7 @@ class StaticObject(ABC):
     """
 
     axes: Axes
-    fills: Tuple[Polygon, ...]
+    fills: Tuple[Union[PPolygon, Polygon], ...]
     plots: Tuple[Line2D, ...]
     texts: Tuple[Text, ...]
     position: StaticObjectPosition
@@ -60,8 +61,8 @@ class StaticObject(ABC):
         :param angle: The new angle of the static object.
         """
         for plot in self.plots:
-            xdata = plot.get_xdata() - self.position.x_center
-            ydata = plot.get_ydata() - self.position.y_center
+            xdata = plot.get_xdata() - np.array(self.position.x_center)
+            ydata = plot.get_ydata() - np.array(self.position.y_center)
             xdata, ydata = rotate(xdata, ydata, self.position.angle)
             xdata, ydata = rotate(xdata, ydata, -angle)
             plot.set_xdata(xdata + x_center)
