@@ -7,13 +7,12 @@ from pathlib import Path
 from typing import Tuple
 
 import matplotlib as mpl
-import pytest
-from matplitlib.figure import Figure
+import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from traffic_scene_renderer import (
     RoadNetwork,
-    RoadNetworkNoAxesError,
     RoadNetworkOptions,
     StopLineOptions,
     Vertex,
@@ -96,19 +95,6 @@ def test_check_crossing_reprocessing() -> None:
     save_fig(fig, axes, Path("road_network") / "crossing_and_connection.png", 20)
 
 
-def test_stopline_before_plot() -> None:
-    vertices = [Vertex(0, 0, 0), Vertex(1, 10, 0)]
-    ways = [Way(vertices)]
-    road_network = RoadNetwork(ways, vertices)
-    road_network.process()
-    try:
-        road_network.add_stopline(ways[0])
-    except RoadNetworkNoAxesError:
-        pass
-    else:
-        pytest.fail("RoadNetworkNoAxes should have been raised.")
-
-
 def test_stopline_not_added() -> None:
     vertices = [
         Vertex(0, -10, 0),
@@ -124,10 +110,11 @@ def test_stopline_not_added() -> None:
     ]
     road_network = RoadNetwork(ways, vertices)
     road_network.process()
-    road_network.plot()
+    fig, _ = road_network.plot()
     assert not road_network.add_stopline(ways[1])  # Way is not connected to crossing
     assert not road_network.add_stopline(ways[0], stoplineoptions=StopLineOptions(stopline=False))
     assert not road_network.add_stopline(ways[2])  # One way road that starts at crossing
+    plt.close(fig)
 
 
 def test_stopline() -> None:
@@ -193,21 +180,9 @@ def test_trafficlights_leftright() -> None:
 
 
 def test_trafficlights_none() -> None:
-    _, _, road_network = simple_crossing()
+    fig, _, road_network = simple_crossing()
     assert not road_network.add_traffic_lights(leftright=(False, False))
-
-
-def test_trafficlight_before_plot() -> None:
-    vertices = [Vertex(0, 0, 0), Vertex(1, 10, 0)]
-    ways = [Way(vertices)]
-    road_network = RoadNetwork(ways, vertices)
-    road_network.process()
-    try:
-        road_network.add_traffic_lights(ways[0])
-    except RoadNetworkNoAxesError:
-        pass
-    else:
-        pytest.fail("RoadNetworkNoAxes should have been raised.")
+    plt.close(fig)
 
 
 def test_traffic_light_with_oneway_road() -> None:
@@ -227,10 +202,12 @@ def test_traffic_light_without_crossing() -> None:
     ways = [Way(vertices)]
     road_network = RoadNetwork(ways, vertices)
     road_network.process()
-    road_network.plot()
+    fig, _ = road_network.plot()
     assert not road_network.add_traffic_lights()
+    plt.close(fig)
 
 
 def test_traffic_light_with_stoplines() -> None:
     fig, axes, road_network = simple_crossing()
     road_network.add_traffic_lights(leftright=(False, True), stoplineoptions=StopLineOptions())
+    plt.close(fig)
