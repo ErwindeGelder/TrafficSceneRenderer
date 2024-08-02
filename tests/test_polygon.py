@@ -16,7 +16,8 @@ YDATA = np.array([0, 1, 1, 0])
 
 def test_polygon_creation() -> None:
     fig, axes = plt.subplots()
-    Polygon(axes, XDATA, YDATA, fixed_color=False)
+    polygon = Polygon(axes, XDATA, YDATA, fixed_color=False)
+    polygon.remove()  # Remove it again
     plt.close(fig)
 
 
