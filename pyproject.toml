@@ -25,8 +25,6 @@ test = [
     "pytest-cov==4.1.0",
     "coverage[toml]==7.3.1",
 ]
-doc = [
-]
 build = [
 ]
 dev = [
@@ -34,7 +32,6 @@ dev = [
     "tox-pyenv-redux",
     "traffic_scene_renderer[lint]",
     "traffic_scene_renderer[test]",
-    "traffic_scene_renderer[doc]",
     "traffic_scene_renderer[build]",
 ]
 
@@ -63,9 +60,6 @@ lint.ignore = [
 ]
 "**/__init__.py" = [
     "F401", # Imported but unused
-]
-"docs/**" = [
-    "INP001",   # Requires __init__.py but docs folder is not a package.
 ]
 
 [tool.ruff.lint.pyupgrade]
