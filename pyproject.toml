@@ -96,3 +96,6 @@ source = ["src/", ".tox/*/lib/python*/site-packages/"]
 
 [tool.coverage.html]
 directory = "reports/coverage_html"
+
+[tool.pypi-publisher]
+repository = "pypi"
