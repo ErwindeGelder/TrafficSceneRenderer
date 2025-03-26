@@ -1,6 +1,8 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
-on: push
+on:
+  release:
+    types: [published]  # Trigger on new GitHub release
 
 jobs:
   build:
@@ -38,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<package-name>  # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/trafficscenerenderer
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
