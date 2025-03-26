@@ -3,6 +3,7 @@ name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 on:
   release:
     types: [created, published]  # Trigger on new GitHub release
+  workflow_dispatch:  # Allows manual triggering
 
 jobs:
   build:
