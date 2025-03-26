@@ -4,13 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traffic_scene_renderer"
+version = "1.0"
 requires-python = ">=3.8"
-dynamic = ["version"]
 dependencies = [
     "matplotlib",
     "numpy",
     "utm"
 ]
+authors = [
+    {name="Erwin de Gelder", email="erwindegelder@gmail.com"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
 
 # Enables the usage of setuptools_scm
 [tool.setuptools_scm]
@@ -46,10 +51,7 @@ lint.select = ["ALL"]
 lint.ignore = [
     "COM812",   # Conflicts with the formatter
     "ISC001",   # Conflicts with the formatter
-    "ANN101",   # "missing-type-self"
     "PT001",    # https://github.com/astral-sh/ruff/issues/8796#issuecomment-1825907715
-    "PT004",    # https://github.com/astral-sh/ruff/issues/8796#issuecomment-1825907715
-    "PT005",    # https://github.com/astral-sh/ruff/issues/8796#issuecomment-1825907715
     "PT023",    # https://github.com/astral-sh/ruff/issues/8796#issuecomment-1825907715
 ]
 
