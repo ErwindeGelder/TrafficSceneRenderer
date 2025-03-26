@@ -29,7 +29,7 @@ class InvalidCarTypeError(Exception):
     def __init__(self, car_type: int) -> None:
         """Description of error."""
         super().__init__(
-            f"Car type '{car_type}' is invalid. " "Choose one of the CarType enumeration."
+            f"Car type '{car_type}' is invalid. Choose one of the CarType enumeration."
         )
 
 
