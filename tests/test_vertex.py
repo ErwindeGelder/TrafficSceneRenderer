@@ -3,7 +3,9 @@
 Author(s): Erwin de Gelder
 """
 
-from traffic_scene_renderer import Vertex, VertexOptions
+import numpy as np
+
+from traffic_scene_renderer import Vertex, VertexOptions, generate_vertices
 
 
 def test_vertex_creation() -> None:
@@ -21,3 +23,12 @@ def test_vertex_creation_with_latlon() -> None:
 def test_vertex_get_xy() -> None:
     vertex = Vertex(0, 1, 2)
     assert vertex.get_xy() == [1, 2]
+
+
+def test_generate_vertices() -> None:
+    vertices1 = generate_vertices(np.array([[0, 0], [1, 1], [2, 2]]))
+    vertices2 = generate_vertices([(0, 0), (1, 1), (2, 2)], idx_start=5)
+    for vertex1, vertex2 in zip(vertices1, vertices2):
+        assert vertex1.xcoordinate == vertex2.xcoordinate
+        assert vertex1.ycoordinate == vertex2.ycoordinate
+        assert vertex1.idx + 5 == vertex2.idx
