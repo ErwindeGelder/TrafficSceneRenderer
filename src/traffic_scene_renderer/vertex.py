@@ -3,7 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -37,7 +37,7 @@ class Vertex:
         :param idx: Index of the vertex. Make sure it is unique.
         :param xdata: x-coordinate.
         :param ydata: y-coordinate.
-        :param options: options, such as latlon and zonenumber.
+        :param options: Options, such as latlon and zonenumber.
         """
         # Define default options.
         self.options = VertexOptions() if options is None else options
@@ -72,3 +72,18 @@ class Vertex:
     def __str__(self) -> str:
         """Return a string with the ID, x-coordinate, and y-coordinate of the vertex."""
         return f"Vertex[ID={self.idx:d}, x={self.xcoordinate:.2f}, y={self.ycoordinate:.2f}]"
+
+
+def generate_vertices(
+    xy_data: Union[np.ndarray, List[Tuple[float, float]]], idx_start: int = 0
+) -> List[Vertex]:
+    """Generate list of vertices based on xy-data.
+
+    The xy-data can be provided in an N-by-2 numpy array, or as a List of tuples of (x,y)
+    coordinates.
+
+    :param xy_data: xy data as described above.
+    :param idx_start: Starting index. Defaults to 0.
+    :return: List of vertices.
+    """
+    return [Vertex(i, x, y) for i, (x, y) in enumerate(xy_data, start=idx_start)]

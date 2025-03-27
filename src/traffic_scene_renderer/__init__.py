@@ -26,5 +26,5 @@ from .static_objects import (
 from .traffic_light import NoAmberError, TrafficLight, TrafficLightOptions, TrafficLightStatus
 from .truck import Truck, TruckOptions
 from .vehicle import MoveVehicleNoPathFollowerDefinedError
-from .vertex import Vertex, VertexOptions
+from .vertex import Vertex, VertexOptions, generate_vertices
 from .way import IndexVertexError, Way, WayOptions
