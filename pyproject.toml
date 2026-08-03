@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "traffic_scene_renderer"
 version = "1.0"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "matplotlib",
     "numpy",
@@ -16,6 +16,14 @@ authors = [
 ]
 readme = "README.md"
 license = {file = "LICENSE"}
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
 
 # Enables the usage of setuptools_scm
 [tool.setuptools_scm]
@@ -26,9 +34,9 @@ lint = [
     "ruff"
 ]
 test = [
-    "pytest==7.4.1",
-    "pytest-cov==4.1.0",
-    "coverage[toml]==7.3.1",
+    "pytest>=7.4.1",
+    "pytest-cov>=6.0.0",
+    "coverage[toml]>=7.0.0",
 ]
 build = [
 ]
@@ -46,7 +54,7 @@ src = ["src"]
 extend-exclude = [
     "conf.py",
 ]
-target-version = "py38"
+target-version = "py310"
 lint.select = ["ALL"]
 lint.ignore = [
     "COM812",   # Conflicts with the formatter
