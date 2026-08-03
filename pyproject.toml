@@ -61,6 +61,7 @@ lint.ignore = [
     "ISC001",   # Conflicts with the formatter
     "PT001",    # https://github.com/astral-sh/ruff/issues/8796#issuecomment-1825907715
     "PT023",    # https://github.com/astral-sh/ruff/issues/8796#issuecomment-1825907715
+    "CPY001",   # No copyright header requirement for this project
 ]
 
 [tool.ruff.lint.per-file-ignores]

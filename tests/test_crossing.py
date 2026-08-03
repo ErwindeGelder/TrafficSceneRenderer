@@ -159,7 +159,9 @@ def test_warning_zebra_no_2_footways() -> None:
     ways = [Way(vertices[:2]), Way(vertices[1:3]), Way(vertices[2:])]
     crossing = Crossing(0, vertices[0], ways)
     crossing.parms.zebra = True
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning, match="No zebra crossing plotted, because not 2 footways connected to crossing"
+    ):
         crossing.plot_zebra(axes)
     plt.close(fig)
 
@@ -174,7 +176,9 @@ def test_warning_zebra_no_2_roadways() -> None:
     ]
     crossing = Crossing(0, vertices[0], ways)
     crossing.parms.zebra = True
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning, match="No zebra crossing plotted, because not 2 roadways connected to crossing"
+    ):
         crossing.plot_zebra(axes)
     plt.close(fig)
 

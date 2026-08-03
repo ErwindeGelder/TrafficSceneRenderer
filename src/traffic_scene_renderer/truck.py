@@ -3,8 +3,6 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Optional, Tuple, Union
-
 import numpy as np
 from matplotlib.axes import Axes
 
@@ -38,8 +36,8 @@ class TruckOptions(VehicleOptions):
 
     length: float = 4.5
     width: float = 2.5
-    color2: Tuple[float, float, float] = (0.02, 0.02, 0.02)
-    color3: Tuple[float, float, float] = (0.2, 0.2, 0.2)
+    color2: tuple[float, float, float] = (0.02, 0.02, 0.02)
+    color3: tuple[float, float, float] = (0.2, 0.2, 0.2)
 
     trailer: bool = False
     l_trailer: float = 9.0
@@ -47,7 +45,7 @@ class TruckOptions(VehicleOptions):
     l_pivot_truck: float = 1.2
     l_pivot_trailer: float = 0.7
 
-    def __init__(self, **kwargs: Union[bool, float, Tuple[float, float, float]]) -> None:
+    def __init__(self, **kwargs: bool | float | tuple[float, float, float]) -> None:
         """Class containing all kinds of options for a truck.
 
         :param kwargs: Any options can be set through kwargs.
@@ -68,7 +66,7 @@ class Truck(Vehicle):
         axes (Axes): The axes that is used for plotting.
     """
 
-    def __init__(self, axes: Axes, options: Optional[TruckOptions] = None) -> None:
+    def __init__(self, axes: Axes, options: TruckOptions | None = None) -> None:
         """Create a truck, possibly with a trailer.
 
         :param axes: The axes on which the truck must be plotted.
@@ -136,7 +134,7 @@ class Truck(Vehicle):
         # Fill mirror and other black (color2) part, both sides.
         xdatas = [np.array([21, 7, 7, 11, 22]), np.array([37, 37, 58, 58])]
         ydatas = [np.array([49, 45, 41, 38, 38]), np.array([152, 168, 168, 152])]
-        for xdata, ydata in zip(xdatas, ydatas):
+        for xdata, ydata in zip(xdatas, ydatas, strict=True):
             xdata_new = (xdata - xoffset) / xscale
             ydata_new = (ydata - yoffset) / yscale
             self.fills += (

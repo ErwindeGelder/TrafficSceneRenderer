@@ -4,7 +4,6 @@ Author(s): Erwin de Gelder
 """
 
 from abc import abstractmethod
-from typing import Optional, Tuple
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -43,8 +42,8 @@ class VehicleOptions(Options):
     x_position_init: float = 0
     y_position_init: float = 0
     angle_init: float = 0
-    color: Tuple[float, float, float] = (0, 0.4375, 0.75)
-    edgecolor: Tuple[float, float, float] = (0, 0, 0)
+    color: tuple[float, float, float] = (0, 0.4375, 0.75)
+    edgecolor: tuple[float, float, float] = (0, 0, 0)
     layer: int = 2
 
 
@@ -61,8 +60,8 @@ class Vehicle(StaticObject):
     def __init__(
         self,
         axes: Axes,
-        options: Optional[VehicleOptions] = None,
-        path_follower: Optional[PathFollower] = None,
+        options: VehicleOptions | None = None,
+        path_follower: PathFollower | None = None,
     ) -> None:
         """Instantiating a vehicle object.
 

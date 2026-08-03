@@ -5,7 +5,6 @@ Author(s): Erwin de Gelder
 
 import copy
 import warnings
-from typing import List, Optional, Tuple, Union
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -27,26 +26,26 @@ MAX_MOTORWAY_SLOW_SPEED = 100
 class WayOptions(Options):
     """The default values of the options of a way object."""
 
-    highway: Optional[str] = None
-    maxspeed: Optional[float] = None
+    highway: str | None = None
+    maxspeed: float | None = None
     nlanes: int = 0
     lanewidth: float = -1
     layer: int = 0
     oneway: bool = False
-    turnlanes: Optional[str] = None
-    linetype: Optional[str] = None
-    line_color: Tuple[float, float, float] = (1, 1, 1)
-    marker_border_color: Tuple[float, float, float] = (1, 1, 1)
+    turnlanes: str | None = None
+    linetype: str | None = None
+    line_color: tuple[float, float, float] = (1, 1, 1)
+    marker_border_color: tuple[float, float, float] = (1, 1, 1)
     show_border: bool = True
     marker_interval: float = 10
-    n_markers: Optional[int] = None
-    marker_fill_color: Tuple[float, float, float] = (1, 1, 1)
-    color: Tuple[float, float, float] = (-1, -1, -1)
-    side_color: Tuple[float, float, float] = (-1, -1, -1)
+    n_markers: int | None = None
+    marker_fill_color: tuple[float, float, float] = (1, 1, 1)
+    color: tuple[float, float, float] = (-1, -1, -1)
+    side_color: tuple[float, float, float] = (-1, -1, -1)
     line_interval: float = -1
     line_length: float = -1
 
-    def __init__(self, **kwargs: Union[bool, float, str, Tuple[float, float, float]]) -> None:
+    def __init__(self, **kwargs: bool | float | str | tuple[float, float, float]) -> None:
         """Create a container for all options for a way.
 
         :param kwargs: Use kwargs to set any option other then the default option.
@@ -89,7 +88,7 @@ class WayOptions(Options):
             return 1
         return 2  # Assume it is a bidirectional road
 
-    def _compute_line_info(self) -> Tuple[float, float]:
+    def _compute_line_info(self) -> tuple[float, float]:
         """Compute line information.
 
         :return: line interval and line length.
@@ -110,7 +109,7 @@ class WayOptions(Options):
             return line_interval, line_interval
         return line_interval, line_length
 
-    def _determine_color(self) -> Tuple[float, float, float]:
+    def _determine_color(self) -> tuple[float, float, float]:
         """Determine the color of the road.
 
         :return: RGB tuple.
@@ -119,7 +118,7 @@ class WayOptions(Options):
             return 1, 0.9, 0.8
         return 0.8, 0.8, 0.8
 
-    def _determine_side_color(self) -> Tuple[float, float, float]:
+    def _determine_side_color(self) -> tuple[float, float, float]:
         """Determine the side color of the road.
 
         :return: RGB tuple.
@@ -173,13 +172,13 @@ class WayPlotData(Options):
 
     i_interval: int = 0
 
-    def __init__(self, **kwargs: Union[List, List[TurnArrow], np.ndarray]) -> None:
+    def __init__(self, **kwargs: list | list[TurnArrow] | np.ndarray) -> None:
         """Create an object to store all plotting information of a way.
 
         :param kwargs: Any parameters that are to be set can be passed via kwargs.
         """
-        self.lines: List = []
-        self.arrows: List[TurnArrow] = []  # For turning arrows.
+        self.lines: list = []
+        self.arrows: list[TurnArrow] = []  # For turning arrows.
         self.lengths = np.array([])
         self.xyline = np.array([])
         Options.__init__(self, **kwargs)
@@ -191,13 +190,13 @@ class WayParameters(Options):
     hwidth: float = 0
 
     def __init__(
-        self, **kwargs: Union[float, List[float], WayConnection, WayCrossing, XYData, WayPlotData]
+        self, **kwargs: float | list[float] | WayConnection | WayCrossing | XYData | WayPlotData
     ) -> None:
         """Create an object to store all parameters for a way.
 
         :param kwargs: Any parameters that are to be set can be passed via kwargs.
         """
-        self.offset: List[float] = []
+        self.offset: list[float] = []
         self.connection: WayConnection = WayConnection()
         self.crossing: WayCrossing = WayCrossing()
         self.left: XYData = XYData()
@@ -224,7 +223,7 @@ class Way:
         parms (WayParameters): All parameters that are used for rendering the way.
     """
 
-    def __init__(self, vertices: List[Vertex], options: Optional[WayOptions] = None) -> None:
+    def __init__(self, vertices: list[Vertex], options: WayOptions | None = None) -> None:
         """Initializes a Way object.
 
         :param vertices: List of vertices of the way.
@@ -263,7 +262,7 @@ class Way:
         way.parms.offset = way.parms.offset[index:]
         return way
 
-    def insert_vertex(self, vertex: Vertex, index: int) -> Tuple[bool, bool]:
+    def insert_vertex(self, vertex: Vertex, index: int) -> tuple[bool, bool]:
         """Insert a vertex.
 
         :param vertex: Vertex to be inserted.
@@ -301,7 +300,7 @@ class Way:
             process_end_again = True
         return process_start_again, process_end_again
 
-    def pop_vertex(self, index: int) -> Tuple[bool, bool]:
+    def pop_vertex(self, index: int) -> tuple[bool, bool]:
         """Remove a vertex from this road.
 
         Note that this vertex cannot be at the start or at the end of the way.
@@ -444,7 +443,7 @@ class Way:
             distance += (self.options.line_interval - self.options.line_length) * interval_ratio
             line[0], line[1], distance = self.point_on_line(distance)
 
-    def point_on_line(self, distance: float) -> Tuple[float, float, float]:
+    def point_on_line(self, distance: float) -> tuple[float, float, float]:
         """Compute the point on the line that is a specified distance away from the start.
 
         The line is defined by the coordinates of self.parms.plot.xy_line. It is
@@ -473,7 +472,7 @@ class Way:
         )
         return easting, northing, distance
 
-    def apply_offset(self, offset: Union[float, List[float]]) -> None:
+    def apply_offset(self, offset: float | list[float]) -> None:
         """Apply offset to the (x,y) data of the vertices of this way.
 
         :param offset: Single offset or list of offsets. In case of list of offsets, there are
@@ -483,7 +482,7 @@ class Way:
                        - A list of N floats. In this case, node i will have an offset of
                          'offset[i]'.
         """
-        if isinstance(offset, List):
+        if isinstance(offset, list):
             if len(offset) == 2:  # noqa: PLR2004
                 xy_data = [[vertex.xcoordinate, vertex.ycoordinate] for vertex in self.vertices]
                 distance = np.array(
@@ -530,7 +529,7 @@ class Way:
         for ilane, direction in enumerate(directions):
             self.plot_markers_lane(axes, ilane, direction, xy_data)
 
-    def get_n_markers(self, xy_data: Optional[np.ndarray] = None) -> int:
+    def get_n_markers(self, xy_data: np.ndarray | None = None) -> int:
         """Return the number of markers that are to be plotted.
 
         This function will set the option n_markers. If this option is already set,
@@ -553,7 +552,7 @@ class Way:
         return n_markers
 
     def plot_markers_lane(
-        self, axes: Axes, ilane: int, direction: str, xy_data: Optional[np.ndarray] = None
+        self, axes: Axes, ilane: int, direction: str, xy_data: np.ndarray | None = None
     ) -> None:
         """Plot the markers for a single lane.
 
@@ -584,8 +583,8 @@ class Way:
             self.parms.plot.arrows.append(turn_arrow)
 
     def compute_position_markers(
-        self, ilane: int, xy_data: Optional[np.ndarray] = None
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        self, ilane: int, xy_data: np.ndarray | None = None
+    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Compute the positions of the markers of a single lane.
 
         :param ilane: The index of the lane.
@@ -644,7 +643,7 @@ class Way:
         return f"Way[vertices={self.ivs}]"
 
 
-def apply_offset(xy_data: np.ndarray, offset: Union[float, List[float]]) -> np.ndarray:
+def apply_offset(xy_data: np.ndarray, offset: float | list[float]) -> np.ndarray:
     """Apply an offset to a line defined by the xy-coordinates.
 
     :param xy_data: N-by-2 array with (x,y)-coordinates.

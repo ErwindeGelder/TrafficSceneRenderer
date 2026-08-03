@@ -4,7 +4,6 @@ Author(s): Erwin de Gelder
 """
 
 from enum import Enum
-from typing import List, Optional, Tuple
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -58,8 +57,8 @@ class CarOptions(VehicleOptions):
     width: float = 1.8
     fill: bool = True
     icar: CarType = CarType.VEHICLE
-    window_color: Tuple[float, float, float] = (1, 1, 1)
-    front_light_color: Tuple[float, float, float] = (1, 1, 1)
+    window_color: tuple[float, float, float] = (1, 1, 1)
+    front_light_color: tuple[float, float, float] = (1, 1, 1)
 
 
 class Car(Vehicle):
@@ -74,8 +73,8 @@ class Car(Vehicle):
     def __init__(
         self,
         axes: Axes,
-        options: Optional[CarOptions] = None,
-        path_follower: Optional[PathFollower] = None,
+        options: CarOptions | None = None,
+        path_follower: PathFollower | None = None,
     ) -> None:
         """Create a car object.
 
@@ -95,7 +94,7 @@ class Car(Vehicle):
         else:
             self.draw_transparent_car()
 
-    def car(self) -> Tuple[List[np.ndarray], List[np.ndarray]]:
+    def car(self) -> tuple[list[np.ndarray], list[np.ndarray]]:
         """Get (x,y) data of the lines for drawing the (transparent) car.
 
         :return: The (x,y) data of the lines for drawing the car.
@@ -177,7 +176,7 @@ class Car(Vehicle):
 
         xdata_scaled = []
         ydata_scaled = []
-        for xdata_sub, ydata_sub in zip(xdata, ydata):
+        for xdata_sub, ydata_sub in zip(xdata, ydata, strict=True):
             xdata_scaled.append((np.array(xdata_sub) - xoffset) / xscale * self.options.length)
             ydata_scaled.append((np.array(ydata_sub) - yoffset) / yscale * self.options.width)
 
@@ -186,7 +185,7 @@ class Car(Vehicle):
     def draw_transparent_car(self) -> None:
         """Draw a transparent car."""
         xdata, ydata = self.car()
-        for xdata_sub, ydata_sub in zip(xdata, ydata):
+        for xdata_sub, ydata_sub in zip(xdata, ydata, strict=True):
             self.plots += (
                 self.axes.plot(
                     ydata_sub,
@@ -257,6 +256,7 @@ class Car(Vehicle):
         for xdata, ydata in zip(
             [np.array([43, 44, 51, 61]), np.array([82, 79, 96]), np.array([44, 40, 82])],
             [np.array([77, 49, 23, 15]), np.array([524, 527, 538]), np.array([493, 396, 524])],
+            strict=True,
         ):
             xdatas = (np.concatenate((xdata, 2 * xoffset - np.flipud(xdata))) - xoffset) / xscale
             ydatas = (np.concatenate((ydata, np.flipud(ydata))) - yoffset) / yscale
@@ -280,6 +280,7 @@ class Car(Vehicle):
                 np.array([67, 69, 75, 83, 90, 153, 147, 146]),
                 np.array([412, 409, 398, 391, 326, 332, 334]),
             ],
+            strict=True,
         ):
             xdatas = (np.concatenate((xdata, 2 * xoffset - np.flipud(xdata))) - xoffset) / xscale
             ydatas = (np.concatenate((ydata, np.flipud(ydata))) - yoffset) / yscale
@@ -310,6 +311,7 @@ class Car(Vehicle):
                 np.array([260, 276, 367, 366, 315]),
                 np.array([494, 514, 529, 536, 538, 538, 527]),
             ],
+            strict=True,
         ):
             xdatas = (np.array(xdata) - xoffset) / xscale
             ydatas = (np.array(ydata) - yoffset) / yscale

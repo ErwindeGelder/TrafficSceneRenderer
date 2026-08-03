@@ -4,7 +4,6 @@ Author(s): Erwin de Gelder
 """
 
 from pathlib import Path
-from typing import List, Union
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -159,12 +158,12 @@ def test_warning_lambda() -> None:
     crossing2 = Crossing(1, vertices[4], ways[2:])
     crossing1.process()
     crossing2.process()
-    with pytest.warns(UserWarning):
+    with pytest.warns(UserWarning, match="Lambda > 1"):
         ways[2].get_xy()
     vertices[3].xcoordinate = 9
     crossing1.process()
     crossing2.process()
-    with pytest.warns(UserWarning):
+    with pytest.warns(UserWarning, match="Lambda > 1"):
         ways[2].get_xy()
 
 
@@ -195,7 +194,7 @@ def test_set_nlanes() -> None:
     save_fig(fig, axes, Path("way") / "fourlanes.png", 10)
 
 
-def plot_way_with_offset(axes: Axes, y_orig: int, offset: Union[float, List[float]]) -> None:
+def plot_way_with_offset(axes: Axes, y_orig: int, offset: float | list[float]) -> None:
     way = Way(
         [Vertex(0, -10, y_orig), Vertex(1, 0, y_orig), Vertex(2, 10, y_orig)],
         WayOptions(line_color=(0.9, 0.9, 0.9), side_color=(0.9, 0.9, 0.9)),
@@ -236,7 +235,10 @@ def test_road_markers() -> None:
 def test_warning_markers_vs_nr_of_lanes() -> None:
     fig, axes = plt.subplots()
     way = Way([Vertex(0, -10, 0), Vertex(1, 10, 0)], WayOptions(turnlanes="through", nlanes=2))
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning,
+        match="Does not know how to plot markers: number of directions is different",
+    ):
         way.plot_markers(axes)
     plt.close(fig)
 
@@ -276,5 +278,5 @@ def test_compute_position_markers() -> None:
 
 
 def test_non_unique_vertex_ids() -> None:
-    with pytest.warns(UserWarning):
+    with pytest.warns(UserWarning, match="The ID of the vertices of this way are not unique"):
         Way([Vertex(0, 0, 0), Vertex(0, 10, 0)])

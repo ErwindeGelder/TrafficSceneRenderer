@@ -3,8 +3,6 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import List, Tuple
-
 import numpy as np
 
 from .crossing import Crossing
@@ -17,9 +15,9 @@ class ConnectionParameters(Options):
     """All kinds of parameters of the connection are contained in this class."""
 
     hlength_merge: float = 5
-    connection_at_start: Tuple[bool, bool] = (True, True)
+    connection_at_start: tuple[bool, bool] = (True, True)
     angle: float = 0
-    distance: Tuple[float, float] = (0, 0)
+    distance: tuple[float, float] = (0, 0)
     xoffset_left: float = 0
     yoffset_left: float = 0
     xoffset_right: float = 0
@@ -103,7 +101,7 @@ class Connection:
         if np.abs(self.parms.angle) <= 3 * np.pi / 4:
             self.crossing = Crossing(0, self.vertex, [self.way1, self.way2])
 
-    def process(self) -> Tuple[List[Vertex], List[int]]:
+    def process(self) -> tuple[list[Vertex], list[int]]:
         """Process the connection for rendering.
 
         :return: List of new vertices and list of indices of the crossings that need to be
@@ -142,7 +140,7 @@ class Connection:
                 self.way2.apply_offset([0, offset])
 
     def compute_single_distance(
-        self, i_way: int, way: Way, vertices: List[Vertex], i_crossings: List[int]
+        self, i_way: int, way: Way, vertices: list[Vertex], i_crossings: list[int]
     ) -> float:
         """Compute distance from a single way from starting vertex to the next one.
 
@@ -172,7 +170,7 @@ class Connection:
             distance = self.parms.hlength_merge
         return distance
 
-    def compute_distance_to_next_vertex(self) -> Tuple[List[Vertex], List[int]]:
+    def compute_distance_to_next_vertex(self) -> tuple[list[Vertex], list[int]]:
         """Compute the distance from the vertex of the connection to the next vertex of the ways.
 
         :return: List of new vertices and list of indices of the crossings that need to be
@@ -244,7 +242,7 @@ class Connection:
             self.way2.parms.connection.y_left_end = self.parms.yoffset_left
             self.way2.parms.connection.y_right_end = self.parms.yoffset_right
 
-    def direction(self, i: int) -> Tuple[float, float]:
+    def direction(self, i: int) -> tuple[float, float]:
         """Compute the direction (i.e., (dx, dy)) of the way.
 
         :param i: index of way, either 0 or 1.

@@ -4,7 +4,6 @@ Author(s): Erwin de Gelder
 """
 
 from abc import ABC
-from typing import Dict, Optional, Tuple, Union
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -37,9 +36,9 @@ class StaticObject(ABC):
     """
 
     axes: Axes
-    fills: Tuple[Union[PPolygon, Polygon], ...]
-    plots: Tuple[Line2D, ...]
-    texts: Tuple[Text, ...]
+    fills: tuple[PPolygon | Polygon, ...]
+    plots: tuple[Line2D, ...]
+    texts: tuple[Text, ...]
     position: StaticObjectPosition
 
     def __init__(self, axes: Axes) -> None:
@@ -85,8 +84,8 @@ class StaticObject(ABC):
 
     def change_color(
         self,
-        face_color: Optional[Tuple[float, float, float]] = None,
-        edge_color: Optional[Tuple[float, float, float]] = None,
+        face_color: tuple[float, float, float] | None = None,
+        edge_color: tuple[float, float, float] | None = None,
     ) -> None:
         """Change the colors of the filled areas and the plotted lines.
 
@@ -106,11 +105,11 @@ class StaticObject(ABC):
 class MaxSpeedOptions(Options):
     """Class containing the default values of the options of a way object."""
 
-    fontsize: Optional[float] = None
-    outer_radius: Optional[float] = None
-    inner_radius: Optional[float] = None
-    outer_color: Tuple[float, float, float] = (1, 0, 0)
-    inner_color: Tuple[float, float, float] = (1, 1, 1)
+    fontsize: float | None = None
+    outer_radius: float | None = None
+    inner_radius: float | None = None
+    outer_color: tuple[float, float, float] = (1, 0, 0)
+    inner_color: tuple[float, float, float] = (1, 1, 1)
 
 
 class MaxSpeed(StaticObject):
@@ -121,7 +120,7 @@ class MaxSpeed(StaticObject):
     """
 
     def __init__(
-        self, axes: Axes, text: Optional[str] = None, options: Optional[MaxSpeedOptions] = None
+        self, axes: Axes, text: str | None = None, options: MaxSpeedOptions | None = None
     ) -> None:
         """Creating a sign with the maximum allowable speed.
 
@@ -191,8 +190,8 @@ class TurnArrowOptions(Options):
 
     width: float = 0.9
     length: float = 2.5
-    face_color: Tuple[float, float, float] = (0.8, 0.8, 0.8)
-    edge_color: Tuple[float, float, float] = (0, 0, 0)
+    face_color: tuple[float, float, float] = (0.8, 0.8, 0.8)
+    edge_color: tuple[float, float, float] = (0, 0, 0)
     layer: int = 0
 
 
@@ -211,8 +210,8 @@ class TurnArrow(StaticObject):
     def __init__(
         self,
         axes: Axes,
-        direction: Optional[str] = None,
-        options: Optional[TurnArrowOptions] = None,
+        direction: str | None = None,
+        options: TurnArrowOptions | None = None,
     ) -> None:
         """Creating a turning arrow.
 
@@ -364,19 +363,19 @@ class BuildingOptions(Options):
     """Options for impassable objects."""
 
     size: float = 2
-    size_x: Optional[float] = None
-    size_y: Optional[float] = None
-    x_data: Optional[np.ndarray] = None
-    y_data: Optional[np.ndarray] = None
-    face_color: Tuple[float, float, float] = (0.5, 0.5, 1)
-    edge_color: Tuple[float, float, float] = (0, 0, 1)
+    size_x: float | None = None
+    size_y: float | None = None
+    x_data: np.ndarray | None = None
+    y_data: np.ndarray | None = None
+    face_color: tuple[float, float, float] = (0.5, 0.5, 1)
+    edge_color: tuple[float, float, float] = (0, 0, 1)
     hatch: str = "//"
 
 
 class Building(StaticObject):
     """A static object, e.g., a building, an impassable object, or a passable object."""
 
-    def __init__(self, axes: Axes, options: Optional[BuildingOptions] = None) -> None:
+    def __init__(self, axes: Axes, options: BuildingOptions | None = None) -> None:
         """Creating a 'building'.
 
         :param axes: The axes on which the building is supposed to be drawn.
@@ -394,7 +393,7 @@ class Building(StaticObject):
             self.options.x_data = np.array([1, 1, -1, -1]) * self.options.size_x / 2
             self.options.y_data = np.array([1, -1, -1, 1]) * self.options.size_y / 2
 
-        fill_options: Dict[str, Union[Tuple[float, float, float], str]]
+        fill_options: dict[str, tuple[float, float, float] | str]
         fill_options = {"facecolor": self.options.face_color, "edgecolor": self.options.edge_color}
         if self.options.hatch:
             fill_options["hatch"] = self.options.hatch
@@ -404,14 +403,14 @@ class Building(StaticObject):
 class StripesOptions(TurnArrowOptions):
     """Class containing the default values of the options of a stripes object."""
 
-    face_color2: Tuple[float, float, float] = (1.0, 0.0, 0.0)
+    face_color2: tuple[float, float, float] = (1.0, 0.0, 0.0)
     nstripes: int = 10
 
 
 class Stripes(StaticObject):
     """Class for drawing a rectangular object with diagonal stripes."""
 
-    def __init__(self, axes: Axes, options: Optional[StripesOptions] = None) -> None:
+    def __init__(self, axes: Axes, options: StripesOptions | None = None) -> None:
         """Creating an object with diagonal stripes (e.g., for a road works sign).
 
         :param axes: The axes on which the turning arrow is supposed to be drawn.
@@ -476,9 +475,9 @@ class Stripes(StaticObject):
 
     def change_color(
         self,
-        face_color: Optional[Tuple[float, float, float]] = None,
-        edge_color: Optional[Tuple[float, float, float]] = None,
-        face_color2: Optional[Tuple[float, float, float]] = None,
+        face_color: tuple[float, float, float] | None = None,
+        edge_color: tuple[float, float, float] | None = None,
+        face_color2: tuple[float, float, float] | None = None,
     ) -> None:
         """Change the colors of the filled areas and the plotted lines.
 

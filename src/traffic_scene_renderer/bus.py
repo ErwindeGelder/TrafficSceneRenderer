@@ -3,8 +3,6 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Optional, Tuple, Union
-
 import numpy as np
 from matplotlib.axes import Axes
 
@@ -39,11 +37,11 @@ class BusOptions(VehicleOptions):
     length: float = 0
     width: float = 2.5
     aspect_ratio: float = 2.69
-    window_color: Tuple[float, float, float] = (1, 1, 1)
-    color2: Optional[Tuple[float, float, float]] = None
+    window_color: tuple[float, float, float] = (1, 1, 1)
+    color2: tuple[float, float, float] | None = None
     luminance_diff: float = 0.3
 
-    def __init__(self, **kwargs: Union[float, Tuple[float, float, float]]) -> None:
+    def __init__(self, **kwargs: float | tuple[float, float, float]) -> None:
         """Create a container for all options for a bus.
 
         :param kwargs: Use kwargs to set any option other then the default option.
@@ -68,8 +66,8 @@ class Bus(Vehicle):
     def __init__(
         self,
         axes: Axes,
-        options: Optional[BusOptions] = None,
-        path_follower: Optional[PathFollower] = None,
+        options: BusOptions | None = None,
+        path_follower: PathFollower | None = None,
     ) -> None:
         """Create a bus object.
 
@@ -82,7 +80,7 @@ class Bus(Vehicle):
         Vehicle.__init__(self, axes, options, path_follower)
         self.options: BusOptions
 
-    def determine_color2(self) -> Tuple[float, float, float]:
+    def determine_color2(self) -> tuple[float, float, float]:
         """If defined, just return color2. If not, return lighter version of color.
 
         :return: RGB tuple of color.
@@ -212,6 +210,7 @@ class Bus(Vehicle):
                 yrear - 28,
                 yrear - 28,
             ),
+            strict=True,
         ):
             for x_pos2 in (x_pos, 212 - x_pos):
                 xdata = (np.ones(2) * x_pos2 - xoffset) / xscale * self.options.width
@@ -228,8 +227,8 @@ class Bus(Vehicle):
 
     def change_color(
         self,
-        face_color: Optional[Tuple[float, float, float]] = None,
-        edge_color: Optional[Tuple[float, float, float]] = None,
+        face_color: tuple[float, float, float] | None = None,
+        edge_color: tuple[float, float, float] | None = None,
     ) -> None:
         """Change the colors of the filled areas and the plotted lines.
 

@@ -4,7 +4,6 @@ Author(s): Erwin de Gelder
 """
 
 from pathlib import Path
-from typing import Tuple
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -156,7 +155,7 @@ def test_dirsign() -> None:
     save_fig(fig, axes, Path("road_network") / "dirsign.png", 10)
 
 
-def simple_crossing() -> Tuple[Figure, Axes, RoadNetwork]:
+def simple_crossing() -> tuple[Figure, Axes, RoadNetwork]:
     vertices = [
         Vertex(0, -10, 0),
         Vertex(1, 0, 0),
@@ -208,6 +207,6 @@ def test_traffic_light_without_crossing() -> None:
 
 
 def test_traffic_light_with_stoplines() -> None:
-    fig, axes, road_network = simple_crossing()
+    fig, _axes, road_network = simple_crossing()
     road_network.add_traffic_lights(leftright=(False, True), stoplineoptions=StopLineOptions())
     plt.close(fig)

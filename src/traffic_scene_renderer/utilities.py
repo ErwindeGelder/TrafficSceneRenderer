@@ -3,15 +3,13 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Optional, Tuple
-
 import numpy as np
 import utm  # Installation required (pip install utm)
 
 
 def wgs_to_utm(
-    points_wgs: np.ndarray, force_zone_number: Optional[int] = None
-) -> Tuple[np.ndarray, Optional[int], str]:
+    points_wgs: np.ndarray, force_zone_number: int | None = None
+) -> tuple[np.ndarray, int | None, str]:
     """Convert WGS coordinates to UTM coordinates, such that zone is similar.
 
     :param points_wgs: N-by-2 array containing N lat-lon coordinates.
@@ -37,7 +35,7 @@ def wgs_to_utm(
     return points_utm, force_zone_number, zone_char
 
 
-def rotate(x_data: np.ndarray, y_data: np.ndarray, angle: float) -> Tuple[np.ndarray, np.ndarray]:
+def rotate(x_data: np.ndarray, y_data: np.ndarray, angle: float) -> tuple[np.ndarray, np.ndarray]:
     """Rotate the (x,y)-data around the origin by a specified angle.
 
     :param x_data: The x-coordinates of the data.
@@ -50,7 +48,7 @@ def rotate(x_data: np.ndarray, y_data: np.ndarray, angle: float) -> Tuple[np.nda
     return x_new, y_new
 
 
-def rgb2hsl(red: float, green: float, blue: float) -> Tuple[float, float, float]:
+def rgb2hsl(red: float, green: float, blue: float) -> tuple[float, float, float]:
     """Convert RGB color format to HSL color format.
 
     :param red: Red content (value from 0 to 1).
@@ -77,7 +75,7 @@ def rgb2hsl(red: float, green: float, blue: float) -> Tuple[float, float, float]
     return hue, saturation, luminance
 
 
-def hsl2rgb(hue: float, saturation: float, luminance: float) -> Tuple[float, float, float]:
+def hsl2rgb(hue: float, saturation: float, luminance: float) -> tuple[float, float, float]:
     """Convert HSL color format to RGB color format.
 
     :param hue: Hue value (value from 0 to 1).
