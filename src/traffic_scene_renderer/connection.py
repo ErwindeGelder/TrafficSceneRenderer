@@ -176,8 +176,8 @@ class Connection:
         :return: List of new vertices and list of indices of the crossings that need to be
                  reprocessed.
         """
-        vertices = []  # type: List[Vertex]
-        i_crossings = []  # type: List[int]
+        vertices = []  # type: list[Vertex]
+        i_crossings = []  # type: list[int]
         self.parms.distance = (
             self.compute_single_distance(0, self.way1, vertices, i_crossings),
             self.compute_single_distance(1, self.way2, vertices, i_crossings),
