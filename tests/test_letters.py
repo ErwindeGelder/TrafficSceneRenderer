@@ -27,7 +27,7 @@ def test_all_letters() -> None:
 
 
 def test_not_implemented_letter() -> None:
-    fig, axes = plt.subplots()
+    _fig, axes = plt.subplots()
     try:
         Letters(axes, "#")
     except NotImplementedError:

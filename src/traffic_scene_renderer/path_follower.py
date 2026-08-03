@@ -3,8 +3,6 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Optional, Tuple
-
 import numpy as np
 
 
@@ -23,8 +21,8 @@ class PathFollower:
         self,
         xcoordinates: np.ndarray,
         ycoordinates: np.ndarray,
-        length: Optional[float] = None,
-        init_rear: Optional[Tuple[int, float]] = None,
+        length: float | None = None,
+        init_rear: tuple[int, float] | None = None,
     ) -> None:
         """Create a PathFollower object that can be used to make an object follow a path.
 
@@ -49,7 +47,7 @@ class PathFollower:
             self.i_segment, self.lambda_segment = init_rear
         self._segment_lengths = np.hypot(np.diff(self.xcoordinates), np.diff(self.ycoordinates))
 
-    def get_rear_xy(self) -> Tuple[float, float]:
+    def get_rear_xy(self) -> tuple[float, float]:
         """Return the (x,y) coordinates of the rear of the vehicle.
 
         :return: [x-coordinate, y-coordinate]
@@ -61,7 +59,7 @@ class PathFollower:
             + self.ycoordinates[self.i_segment + 1] * self.lambda_segment,
         )
 
-    def get_location_front(self) -> Tuple[int, float]:
+    def get_location_front(self) -> tuple[int, float]:
         """Find the location of the front of the vehicle, given its position of the rear.
 
         :return: [Segment of front, Fraction of segment covered by front]
@@ -97,7 +95,7 @@ class PathFollower:
         ) / (2 * quadratic_a)
         return i, lambda_segment
 
-    def get_front_xy(self) -> Tuple[float, float]:
+    def get_front_xy(self) -> tuple[float, float]:
         """Return the (x,y) coordinates of the front of the vehicle.
 
         :return: [x-coordinate, y-coordinate]
@@ -110,7 +108,7 @@ class PathFollower:
             + self.ycoordinates[i_segment] * lambda_segment,
         )
 
-    def get_center_coordinates(self) -> Tuple[float, float, float]:
+    def get_center_coordinates(self) -> tuple[float, float, float]:
         """Get the center coordinates, including the heading.
 
         :return: [x-coordinate, y-coordinate, angle]
@@ -120,7 +118,7 @@ class PathFollower:
         angle = np.arctan2(xfront - xrear, yfront - yrear)
         return (xfront + xrear) / 2, (yfront + yrear) / 2, angle
 
-    def move_vehicle(self, stepsize: float) -> Tuple[float, float, float]:
+    def move_vehicle(self, stepsize: float) -> tuple[float, float, float]:
         """Move the vehicle a tiny bit and return new coordinates.
 
         :return: [x-coordinate, y-coordinate, angle]

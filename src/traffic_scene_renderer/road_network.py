@@ -3,7 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import List, NamedTuple, Optional, Tuple, Union
+from typing import NamedTuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -34,9 +34,7 @@ class StopLineOptions(Options):
 
     stopline: bool = True  # By default, a stop line is added when calling the add_stopline.
     stopsign: bool = False  # By default, no stop sign is added.
-    dir_signs: Optional[List[Union[str, None]]] = (
-        None  # Whether to add directional signs on the road.
-    )
+    dir_signs: list[str | None] | None = None  # Whether to add directional signs on the road.
     lonoffset: float = 0  # Further offset of the line from the crossing.
 
 
@@ -44,25 +42,25 @@ class RoadNetworkOptions(Options):
     """Options for a road network."""
 
     rightdrive: bool = True
-    face_color: Tuple[float, float, float] = (0.8, 1, 0.8)
-    face_color_roundabout: Optional[Tuple[float, float, float]] = None
+    face_color: tuple[float, float, float] = (0.8, 1, 0.8)
+    face_color_roundabout: tuple[float, float, float] | None = None
     overrule_colors: bool = True
-    line_color: Tuple[float, float, float] = (0, 0, 0)
-    marker_border_color: Tuple[float, float, float] = (1, 1, 1)
-    marker_fill_color: Tuple[float, float, float] = (1, 1, 1)
+    line_color: tuple[float, float, float] = (0, 0, 0)
+    marker_border_color: tuple[float, float, float] = (1, 1, 1)
+    marker_fill_color: tuple[float, float, float] = (1, 1, 1)
 
 
 class RoadNetworkParameters(Options):
     """Parameters for a road network."""
 
     def __init__(
-        self, **kwargs: Union[List[int], List[TrafficLight], List[TurnArrow], Axes, np.ndarray]
+        self, **kwargs: list[int] | list[TrafficLight] | list[TurnArrow] | Axes | np.ndarray
     ) -> None:
         """Initialize the parameters for a road network."""
-        self.ivs: List[int] = []
+        self.ivs: list[int] = []
         self.figure, self.axes = plt.subplots(1, 1, figsize=(15, 7))
-        self.traffic_lights: List[TrafficLight] = []
-        self.turn_arrows: List[TurnArrow] = []
+        self.traffic_lights: list[TrafficLight] = []
+        self.turn_arrows: list[TurnArrow] = []
         self.mat_edges: np.ndarray = np.array([])
         self.n_edges_per_vertex: np.ndarray = np.array([])
         Options.__init__(self, **kwargs)
@@ -81,7 +79,7 @@ class RoadNetwork:
     """
 
     def __init__(
-        self, ways: List[Way], vertices: List[Vertex], options: Optional[RoadNetworkOptions] = None
+        self, ways: list[Way], vertices: list[Vertex], options: RoadNetworkOptions | None = None
     ) -> None:
         """Initialize a road network.
 
@@ -107,7 +105,7 @@ class RoadNetwork:
         self.parms.mat_edges = np.zeros((len(self.vertices), n_edges), dtype=bool)
         i_edge = 0  # Index of edge.
         for way in self.ways:
-            for i_vertex1, i_vertex2 in zip(way.ivs[:-1], way.ivs[1:]):
+            for i_vertex1, i_vertex2 in zip(way.ivs[:-1], way.ivs[1:], strict=True):
                 self.parms.mat_edges[self.parms.ivs.index(i_vertex1), i_edge] = True
                 self.parms.mat_edges[self.parms.ivs.index(i_vertex2), i_edge] = True
                 i_edge += 1
@@ -135,7 +133,7 @@ class RoadNetwork:
                     break
             i_way += 1
 
-    def construct_crossings(self) -> List[Crossing]:
+    def construct_crossings(self) -> list[Crossing]:
         """Construct the crossings of the road network.
 
         If a vertex contains more than 2 edges, a crossing is constructed.
@@ -158,7 +156,7 @@ class RoadNetwork:
                 n_crossings += 1
         return crossings
 
-    def construct_connections(self) -> List[Connection]:
+    def construct_connections(self) -> list[Connection]:
         """Construct the connections of the road network.
 
         A connection connects ways that are not connected using a crossing. This is the case
@@ -230,7 +228,7 @@ class RoadNetwork:
         for way in self.ways:
             way.process()
 
-    def plot(self) -> Tuple[Figure, Axes]:
+    def plot(self) -> tuple[Figure, Axes]:
         """Plot the road network.
 
         :return: plot handle.
@@ -280,7 +278,7 @@ class RoadNetwork:
 
         return self.parms.figure, self.parms.axes
 
-    def find_crossing(self, way: Way) -> Union[CrossingInfo, None]:
+    def find_crossing(self, way: Way) -> CrossingInfo | None:
         """Find a crossing that is connected to the given way.
 
         :param way: The way for which a crossing has to be found.
@@ -305,8 +303,8 @@ class RoadNetwork:
     def add_stopline(
         self,
         way: Way,
-        info: Optional[CrossingInfo] = None,
-        stoplineoptions: Optional[StopLineOptions] = None,
+        info: CrossingInfo | None = None,
+        stoplineoptions: StopLineOptions | None = None,
     ) -> bool:
         """Add a stopping line to the given way.
 
@@ -392,7 +390,7 @@ class RoadNetwork:
                 )
 
     def add_dirsigns(
-        self, way: Way, info: CrossingInfo, dir_signs: Union[List[Union[str, None]], None]
+        self, way: Way, info: CrossingInfo, dir_signs: list[str | None] | None
     ) -> None:
         """Add directional signs to a given way.
 
@@ -428,11 +426,11 @@ class RoadNetwork:
 
     def add_traffic_lights(
         self,
-        crossing: Optional[Crossing] = None,
-        leftright: Optional[Tuple[bool, bool]] = None,
-        options: Optional[TrafficLightOptions] = None,
-        stoplineoptions: Optional[StopLineOptions] = None,
-    ) -> List[TrafficLight]:
+        crossing: Crossing | None = None,
+        leftright: tuple[bool, bool] | None = None,
+        options: TrafficLightOptions | None = None,
+        stoplineoptions: StopLineOptions | None = None,
+    ) -> list[TrafficLight]:
         """Add the traffic lights. It is only useful to call this function after plot().
 
         It will add traffic lights on both sides of a way, if a way is connected to a
@@ -444,7 +442,7 @@ class RoadNetwork:
         :param stoplineoptions: Options for stopline. If none provided, no stopline is added.
         :return: List of traffic lights that have been added.
         """
-        traffic_lights: List[TrafficLight] = []
+        traffic_lights: list[TrafficLight] = []
         if leftright is None or (leftright[0] and leftright[1]):
             location = [False, True]
         elif leftright[0]:

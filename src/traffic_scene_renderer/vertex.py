@@ -3,8 +3,6 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import List, Optional, Tuple
-
 import numpy as np
 
 from .options import Options
@@ -15,7 +13,7 @@ class VertexOptions(Options):
     """The default options for a vertex."""
 
     latlon: bool = False
-    zonenumber: Optional[int] = None
+    zonenumber: int | None = None
 
 
 class Vertex:
@@ -30,7 +28,7 @@ class Vertex:
     """
 
     def __init__(
-        self, idx: int, xdata: float, ydata: float, options: Optional[VertexOptions] = None
+        self, idx: int, xdata: float, ydata: float, options: VertexOptions | None = None
     ) -> None:
         """Create vertex object.
 
@@ -50,7 +48,7 @@ class Vertex:
                 force_zone_number=self.options.zonenumber
             )
 
-    def compute_wgs(self, force_zone_number: Optional[int] = None) -> Tuple[float, float]:
+    def compute_wgs(self, force_zone_number: int | None = None) -> tuple[float, float]:
         """Compute the wgs coordinates.
 
         :param force_zone_number: Zone number to be used. When set to none, zone is determined by
@@ -62,7 +60,7 @@ class Vertex:
         self.options.zonenumber = utm[1]
         return utm[0][0, 0], utm[0][0, 1]
 
-    def get_xy(self) -> List:
+    def get_xy(self) -> list:
         """Get the (x, y)-coordinate of this vertex.
 
         :return: The (x, y) coordinate as a list of two numbers.

@@ -4,7 +4,7 @@ Author(s): Erwin de Gelder
 """
 
 import warnings
-from typing import List, NamedTuple, Optional, Tuple, Union
+from typing import NamedTuple
 
 import numpy as np
 from matplotlib import patches
@@ -49,19 +49,19 @@ class IntersectionWays(NamedTuple):
 class CrossingOptions(Options):
     """Object containing the objects for a crossing."""
 
-    color: Optional[Tuple[float, float, float]] = None
-    edge_color: Tuple[float, float, float] = (0, 0, 0)
+    color: tuple[float, float, float] | None = None
+    edge_color: tuple[float, float, float] = (0, 0, 0)
     n_corner_pieces: int = 20
     radius: float = -1
-    zebra_color: Tuple[float, float, float] = (1, 1, 1)
+    zebra_color: tuple[float, float, float] = (1, 1, 1)
     zebra_width: float = 0.8
     zebra_square_markings: bool = False
-    zebra_square_markings_color: Tuple[float, float, float] = (235 / 255, 203 / 255, 108 / 255)
+    zebra_square_markings_color: tuple[float, float, float] = (235 / 255, 203 / 255, 108 / 255)
     zorder: int = 0
     roundabout: bool = False
     roundabout_outer_radius: float = 6
     roundabout_inner_radius: float = 2
-    roundabout_inner_color: Tuple[float, float, float] = (0.8, 1, 0.8)
+    roundabout_inner_color: tuple[float, float, float] = (0.8, 1, 0.8)
     default_radius: float = 2.0
     default_radius_footway: float = 0.01
 
@@ -90,9 +90,7 @@ class CrossingParameters(Options):
     processed: bool = False
     part_of_big_crossing: bool = False
 
-    def __init__(
-        self, **kwargs: Union[bool, CrossingCircles, XYData, CrossingWayParameters]
-    ) -> None:
+    def __init__(self, **kwargs: bool | CrossingCircles | XYData | CrossingWayParameters) -> None:
         """Initialize object that contains various parameters of a crossing.
 
         :param kwargs: Any parameters that are to be set can be passed via kwargs.
@@ -117,7 +115,7 @@ class Crossing:
     """
 
     def __init__(
-        self, index: int, vertex: Vertex, ways: List[Way], options: Optional[CrossingOptions] = None
+        self, index: int, vertex: Vertex, ways: list[Way], options: CrossingOptions | None = None
     ) -> None:
         """Initialize a crossing.
 
@@ -406,8 +404,8 @@ class Crossing:
         self.parms.processed = True
 
     def roundabout_corner(
-        self, i_way1: int, i_way2: int, *, big_angle: bool, radius: Optional[float] = None
-    ) -> Tuple[np.ndarray, np.ndarray]:
+        self, i_way1: int, i_way2: int, *, big_angle: bool, radius: float | None = None
+    ) -> tuple[np.ndarray, np.ndarray]:
         """Create a corner of a roundabout.
 
         The function is used to create the corners of a roundabout. However,
@@ -578,7 +576,7 @@ class Crossing:
                             color=self.options.zebra_square_markings_color,
                         )
 
-    def find_endpoints_zebra(self) -> Tuple[List, List, List, List]:
+    def find_endpoints_zebra(self) -> tuple[list, list, list, list]:
         """Find the endpoints of the zebra crossing.
 
         :return: A list of the coordinates of the footway and a list of the coordinates of the
@@ -598,8 +596,8 @@ class Crossing:
         return x_footway, y_footway, x_road, y_road
 
     def compute_coordinates_zebra(
-        self, x_footway: List, y_footway: List, x_road: List, y_road: List
-    ) -> Tuple[int, float, float, np.ndarray, np.ndarray]:
+        self, x_footway: list, y_footway: list, x_road: list, y_road: list
+    ) -> tuple[int, float, float, np.ndarray, np.ndarray]:
         """Determine coordinates of a zebra stripe with center (0, 0).
 
         :param x_footway: The x-coordinates of the footway.
@@ -625,7 +623,7 @@ class Crossing:
         )
         return nstripes, dxf, dyf, xstripe, ystripe
 
-    def direction(self, index_or_way: Union[int, Way]) -> Tuple[float, float]:
+    def direction(self, index_or_way: int | Way) -> tuple[float, float]:
         """Compute the direction (i.e., (dx, dy)) of the way.
 
         :param index_or_way: index of way or the way itself.
@@ -646,7 +644,7 @@ class Crossing:
         return difference_x, difference_y
 
     def start_and_direction(
-        self, index_or_way: Union[int, Way], offset: float, *, left: bool
+        self, index_or_way: int | Way, offset: float, *, left: bool
     ) -> StartDirection:
         """Compute starting position and direction of way i, given an offset.
 

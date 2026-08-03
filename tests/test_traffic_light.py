@@ -86,7 +86,7 @@ def test_no_amber_error() -> None:
 
 
 def test_str() -> None:
-    fig, axes = plt.subplots()
+    _fig, axes = plt.subplots()
     traffic_light = TrafficLight(axes)
     assert str(traffic_light) == "Traffic light, status=IDLE"
     traffic_light.set_status(TrafficLightStatus.REMOVED)

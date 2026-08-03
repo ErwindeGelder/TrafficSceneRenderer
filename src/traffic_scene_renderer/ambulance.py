@@ -3,8 +3,6 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Optional, Tuple
-
 import numpy as np
 from matplotlib.axes import Axes
 
@@ -37,13 +35,13 @@ class AmbulanceOptions(BusOptions):
 
     length: float = 4.8
     width: float = 2.5
-    color: Tuple[float, float, float] = (0.8, 0.8, 0.8)
-    color2: Optional[Tuple[float, float, float]] = None
+    color: tuple[float, float, float] = (0.8, 0.8, 0.8)
+    color2: tuple[float, float, float] | None = None
     luminance_diff: float = 0.3
-    window_color: Tuple[float, float, float] = (0.2, 0.2, 0.2)
-    front_light_color: Tuple[float, float, float] = (1, 1, 1)
-    emergency_color: Tuple[float, float, float] = (0.9, 0.15, 0.15)
-    hospital_sign_color: Tuple[float, float, float] = (0.25, 0.5, 0.75)
+    window_color: tuple[float, float, float] = (0.2, 0.2, 0.2)
+    front_light_color: tuple[float, float, float] = (1, 1, 1)
+    emergency_color: tuple[float, float, float] = (0.9, 0.15, 0.15)
+    hospital_sign_color: tuple[float, float, float] = (0.25, 0.5, 0.75)
 
 
 class Ambulance(Bus):
@@ -56,7 +54,7 @@ class Ambulance(Bus):
         axes (Axes): The axes that is used for plotting.
     """
 
-    def __init__(self, axes: Axes, options: Optional[AmbulanceOptions] = None) -> None:
+    def __init__(self, axes: Axes, options: AmbulanceOptions | None = None) -> None:
         """Create an ambulance.
 
         :param axes: Axes on which the ambulance has to be plotted.
@@ -101,7 +99,7 @@ class Ambulance(Bus):
             np.array([16, 17, 23, 26, 88, 88, 83, 29, 83, 82, 81]),
             np.array([118, 119, 120, 121, 122, 124, 297, 299]),
         )
-        for xdata, ydata in zip(xdatas, ydatas):
+        for xdata, ydata in zip(xdatas, ydatas, strict=True):
             xdata_new = (np.concatenate((xdata, 2 * xoffset - np.flipud(xdata))) - xoffset) / xscale
             ydata_new = (np.concatenate((ydata, np.flipud(ydata))) - yoffset) / yscale
             self.fills += (

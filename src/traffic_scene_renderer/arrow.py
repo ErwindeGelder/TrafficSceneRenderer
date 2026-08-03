@@ -3,7 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Any, List, Union
+from typing import Any
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -13,8 +13,8 @@ SVD_TOL = 0.001
 
 def arrow(
     axes: Axes,
-    xdata: Union[List, np.ndarray],
-    ydata: Union[List, np.ndarray],
+    xdata: list | np.ndarray,
+    ydata: list | np.ndarray,
     size: float = 0.75,
     **kwargs: Any,  # noqa: ANN401  # Ignore because otherwise mypy will complain.
 ) -> None:
@@ -66,7 +66,7 @@ def arrow(
     axes.plot(xdata[-1] + xydata[0], ydata[-1] + xydata[1], **kwargs)
 
 
-def compute_ellipse(xdata: Union[List, np.ndarray], ydata: Union[List, np.ndarray]) -> np.ndarray:
+def compute_ellipse(xdata: list | np.ndarray, ydata: list | np.ndarray) -> np.ndarray:
     """Compute an ellipse connecting the four points.
 
     :param xdata: The x values of the coordinates.
@@ -93,7 +93,7 @@ def compute_ellipse(xdata: Union[List, np.ndarray], ydata: Union[List, np.ndarra
     return xy_ellipse
 
 
-def compute_sinus(xdata: Union[List, np.ndarray], ydata: Union[List, np.ndarray]) -> np.ndarray:
+def compute_sinus(xdata: list | np.ndarray, ydata: list | np.ndarray) -> np.ndarray:
     """Compute a sinus connecting the four points.
 
     :param xdata: The x values of the coordinates.

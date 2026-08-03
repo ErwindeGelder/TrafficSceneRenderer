@@ -4,7 +4,7 @@ Author(s): Erwin de Gelder
 """
 
 import sys
-from typing import NamedTuple, Optional, Tuple
+from typing import NamedTuple
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -23,14 +23,14 @@ class LetterData(NamedTuple):
     ydata: np.ndarray
     xcenter: float
     ycenter: float
-    xdata_plot: Optional[Tuple[np.ndarray, ...]] = None
-    ydata_plot: Optional[Tuple[np.ndarray, ...]] = None
+    xdata_plot: tuple[np.ndarray, ...] | None = None
+    ydata_plot: tuple[np.ndarray, ...] | None = None
 
 
 class Letter(StaticObject):
     """Draw a letter (A to Z (capital) implemented)."""
 
-    def __init__(self, axes: Axes, letter: str, options: Optional[LetterOptions] = None) -> None:
+    def __init__(self, axes: Axes, letter: str, options: LetterOptions | None = None) -> None:
         """Create a single letter.
 
         :param axes: Axes on which the letter should be plotted.
@@ -57,7 +57,7 @@ class Letter(StaticObject):
             )[0],
         )
         if data.xdata_plot and data.ydata_plot:
-            for xdata, ydata in zip(data.xdata_plot, data.ydata_plot):
+            for xdata, ydata in zip(data.xdata_plot, data.ydata_plot, strict=True):
                 self.plots += (
                     axes.plot(
                         (np.concatenate((xdata, np.array([xdata[0]]))) - data.xcenter)
@@ -86,8 +86,8 @@ class Letter(StaticObject):
 
     def change_color(
         self,
-        face_color: Optional[Tuple[float, float, float]] = None,
-        edge_color: Optional[Tuple[float, float, float]] = None,
+        face_color: tuple[float, float, float] | None = None,
+        edge_color: tuple[float, float, float] | None = None,
     ) -> None:
         """Change the colors of the letter.
 
@@ -109,7 +109,7 @@ class LettersOptions(TurnArrowOptions):
 class Letters(StaticObject):
     """A sign consisting of multiple letters."""
 
-    def __init__(self, axes: Axes, sign: str, options: Optional[LettersOptions] = None) -> None:
+    def __init__(self, axes: Axes, sign: str, options: LettersOptions | None = None) -> None:
         """Create a series of letters.
 
         :param axes: Axes on which the letters should be plotted.
@@ -134,13 +134,13 @@ class Letters(StaticObject):
             layer=self.options.layer,
         )
         self.letters = [Letter(axes, letter, options=letter_options) for letter in sign]
-        for letter, xpos in zip(self.letters, self.x_letters):
+        for letter, xpos in zip(self.letters, self.x_letters, strict=True):
             letter.change_pos(xpos, 0, 0)
 
     def change_color(
         self,
-        face_color: Optional[Tuple[float, float, float]] = None,
-        edge_color: Optional[Tuple[float, float, float]] = None,
+        face_color: tuple[float, float, float] | None = None,
+        edge_color: tuple[float, float, float] | None = None,
     ) -> None:
         """Change the colors of the letters.
 
@@ -157,7 +157,7 @@ class Letters(StaticObject):
         :param ycenter: New y-coordinate.
         :param angle: New angle.
         """
-        for letter, xpos in zip(self.letters, self.x_letters):
+        for letter, xpos in zip(self.letters, self.x_letters, strict=True):
             letter.change_pos(xcenter + np.cos(angle) * xpos, ycenter - np.sin(angle) * xpos, angle)
 
 

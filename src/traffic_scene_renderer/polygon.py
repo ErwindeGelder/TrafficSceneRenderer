@@ -3,7 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
-from typing import Any, Tuple
+from typing import Any
 
 import numpy as np
 from matplotlib import patches
@@ -93,7 +93,7 @@ class Polygon:
         self.ydata = xydata[:, 1]
         self.patch.set_xy(xydata)
 
-    def set_color(self, color: Tuple[float, float, float]) -> None:
+    def set_color(self, color: tuple[float, float, float]) -> None:
         """Set the color of the polygon.
 
         If the polygon has a fixed color, nothing is done.
@@ -103,7 +103,7 @@ class Polygon:
         if not self.fixed_color:
             self.patch.set_color(color)
 
-    def set_facecolor(self, color: Tuple[float, float, float]) -> None:
+    def set_facecolor(self, color: tuple[float, float, float]) -> None:
         """Set the face color of the polygon.
 
         If the polygon has a fixed color, nothing is done.
@@ -114,14 +114,14 @@ class Polygon:
         if not self.fixed_color:
             self.patch.set_facecolor(color)
 
-    def set_facecolor_forced(self, color: Tuple[float, float, float]) -> None:
+    def set_facecolor_forced(self, color: tuple[float, float, float]) -> None:
         """Set the face color of the polygon, regardless of whether the color is fixed.
 
         :param color: The face color of the polygon.
         """
         self.patch.set_facecolor(color)
 
-    def set_edgecolor(self, color: Tuple[float, float, float]) -> None:
+    def set_edgecolor(self, color: tuple[float, float, float]) -> None:
         """Set the edge color of the polygon.
 
         If the polygon has a fixed color, nothing is done.

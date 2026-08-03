@@ -4,7 +4,6 @@ Author(s): Erwin de Gelder
 """
 
 from enum import Enum
-from typing import Optional, Tuple
 
 import numpy as np
 from matplotlib.axes import Axes
@@ -30,13 +29,13 @@ class TrafficLightOptions(Options):
     width: float = 0
     length: float = 0
     inter_dist: float = 0
-    rectangle_color: Tuple[float, float, float] = (0, 0, 0)
-    red_color: Tuple[float, float, float] = (1, 0, 0)
-    amber_color: Tuple[float, float, float] = (1, 1, 0)
-    green_color: Tuple[float, float, float] = (0, 1, 0)
-    red_idle_color: Tuple[float, float, float] = (0.4, 0, 0)
-    amber_idle_color: Tuple[float, float, float] = (0.4, 0.4, 0)
-    green_idle_color: Tuple[float, float, float] = (0, 0.4, 0)
+    rectangle_color: tuple[float, float, float] = (0, 0, 0)
+    red_color: tuple[float, float, float] = (1, 0, 0)
+    amber_color: tuple[float, float, float] = (1, 1, 0)
+    green_color: tuple[float, float, float] = (0, 1, 0)
+    red_idle_color: tuple[float, float, float] = (0.4, 0, 0)
+    amber_idle_color: tuple[float, float, float] = (0.4, 0.4, 0)
+    green_idle_color: tuple[float, float, float] = (0, 0.4, 0)
     signal_lines: int = 8
     signal_inner_radius: float = 0
     signal_outer_radius: float = 0
@@ -60,7 +59,7 @@ class TrafficLight(StaticObject):
         status (TrafficLightStatus): The status of the traffic light.
     """
 
-    def __init__(self, axes: Axes, options: Optional[TrafficLightOptions] = None) -> None:
+    def __init__(self, axes: Axes, options: TrafficLightOptions | None = None) -> None:
         """Create a traffic light object.
 
         :param axes: The axes on which the traffic light is supposed to be drawn.
@@ -166,7 +165,7 @@ class TrafficLight(StaticObject):
         self.fills = ()
         self.status = TrafficLightStatus.REMOVED
 
-    def signal_data(self, signal: TrafficLightStatus) -> Tuple[np.ndarray, np.ndarray]:
+    def signal_data(self, signal: TrafficLightStatus) -> tuple[np.ndarray, np.ndarray]:
         """Get the x and y data of the signal.
 
         :param signal: The signal to show.
