@@ -1,5 +1,13 @@
 # Traffic scene renderer
 
+![PyPI - Version](https://img.shields.io/pypi/v/traffic-scene-renderer)
+![GitHub License](https://img.shields.io/github/license/ErwindeGelder/TrafficSceneRenderer)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/traffic-scene-renderer)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+[![codecov](https://codecov.io/gh/ErwindeGelder/TrafficSceneRenderer/graph/badge.svg)](https://codecov.io/gh/ErwindeGelder/TrafficSceneRenderer)
+[![PyPI Downloads](https://static.pepy.tech/badge/traffic-scene-renderer/month)](https://pepy.tech/projects/traffic-scene-renderer)
+
 This traffic scene renderer enables drawing top-view overviews of traffic constellations. 
 This drawings can be printed on screen using `matplotlib` and exported to images or `tikz` files that can be rendered with LaTeX to create vector-based drawings of the traffic scenes.
 
