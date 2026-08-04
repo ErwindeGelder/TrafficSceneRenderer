@@ -67,3 +67,16 @@ def test_airport_vehicle_different_colors() -> None:
     vehicle = AirportVehicle(axes, AirportVehicleOptions(color=(0, 0, 0.8), color3=(0.2, 0.2, 0.2)))
     vehicle.change_pos(8, 0)
     save_fig(fig, axes, Path("airport_vehicle") / "airport_vehicle_different_colors.png", 24)
+
+
+def test_airport_vehicle_with_path_follower() -> None:
+    fig, axes = plt.subplots()
+    axes.set_xlim(-2, 8)
+    axes.set_ylim(-4, 14)
+    x_path, y_path = np.array([0, 0, 1, 3, 23]), np.array([0, 2, 5, 7, 27])
+    path_follower = PathFollower(x_path, y_path)
+    vehicle = AirportVehicle(axes, AirportVehicleOptions(n_trailers=3), path_follower=path_follower)
+    for _ in range(50):
+        vehicle.move_vehicle(0.2)
+    axes.plot(x_path, y_path, color="black", linewidth=0.5)
+    save_fig(fig, axes, Path("airport_vehicle") / "airport_vehicle_with_path_follower.png", 8)
