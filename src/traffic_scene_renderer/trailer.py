@@ -55,7 +55,25 @@ class Trailer(Vehicle, ABC):
         ypos_center = ypos - np.cos(angle) * distance_from_center
         self.change_pos(xpos_center, ypos_center, angle)
 
-    def get_rearpivot_x(self) -> float:
+    def get_front_pivot_x(self) -> float:
+        """Return the x-coordinate of the front pivot of the trailer.
+
+        :return: The x-coordinate of the front pivot of the trailer.
+        """
+        return self.position.x_center + self.options.length * np.sin(self.position.angle) * (
+            self.options.front_pivot - 0.5
+        )
+
+    def get_front_pivot_y(self) -> float:
+        """Return the y-coordinate of the front pivot of the trailer.
+
+        :return: The y-coordinate of the front pivot of the trailer.
+        """
+        return self.position.y_center + self.options.length * np.cos(self.position.angle) * (
+            self.options.front_pivot - 0.5
+        )
+
+    def get_rear_pivot_x(self) -> float:
         """Return the x-coordinate of the rear pivot of the trailer.
 
         :return: The x-coordinate of the rear pivot of the trailer.
@@ -64,7 +82,7 @@ class Trailer(Vehicle, ABC):
             self.options.rear_pivot - 0.5
         )
 
-    def get_rearpivot_y(self) -> float:
+    def get_rear_pivot_y(self) -> float:
         """Return the y-coordinate of the rear pivot of the trailer.
 
         :return: The y-coordinate of the rear pivot of the trailer.
@@ -89,7 +107,7 @@ class Trailer(Vehicle, ABC):
         # trailer such that it ends up at the required distance. This is computed using quadratic
         # solving using the abc-formula. The smaller solution is the right one - this works if the
         # step is not too big.
-        xrearpivot, yrearpivot = self.get_rearpivot_x(), self.get_rearpivot_y()
+        xrearpivot, yrearpivot = self.get_rear_pivot_x(), self.get_rear_pivot_y()
         quadratic_b = 2 * (
             (xrearpivot - xpos) * np.sin(self.position.angle)
             + (yrearpivot - ypos) * np.cos(self.position.angle)
