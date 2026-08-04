@@ -145,7 +145,7 @@ class TrafficLight(StaticObject):
 
         It can happen that the position of the traffic light does not coincide with
         the information given by self.position. This happens when the traffic light
-        is redrawn, e.g., using self.idle(). To set the position correcly again,
+        is redrawn, e.g., using self.idle(). To set the position correctly again,
         this function can be used.
         """
         x_center, y_center = self.position.x_center, self.position.y_center
@@ -196,7 +196,7 @@ class TrafficLight(StaticObject):
         self.plot_idle()
         self.status = TrafficLightStatus.RED
         xdata, ydata = self.signal_data(self.status)
-        self.plots = (self.axes.plot(xdata, ydata, color=self.options.red_color)[0],)
+        self.plots = tuple(self.axes.plot(xdata, ydata, color=self.options.red_color))
         if self.options.amber:
             self.fills[2].set_color(self.options.amber_idle_color)
             self.fills[3].set_color(self.options.green_idle_color)
@@ -212,7 +212,7 @@ class TrafficLight(StaticObject):
         self.plot_idle()
         self.status = TrafficLightStatus.AMBER
         xdata, ydata = self.signal_data(self.status)
-        self.plots = (self.axes.plot(xdata, ydata, color=self.options.amber_color)[0],)
+        self.plots = tuple(self.axes.plot(xdata, ydata, color=self.options.amber_color))
         self.fills[1].set_color(self.options.red_idle_color)
         self.fills[3].set_color(self.options.green_idle_color)
         self.set_position()
@@ -223,7 +223,7 @@ class TrafficLight(StaticObject):
         self.plot_idle()
         self.status = TrafficLightStatus.GREEN
         xdata, ydata = self.signal_data(self.status)
-        self.plots = (self.axes.plot(xdata, ydata, color=self.options.green_color)[0],)
+        self.plots = tuple(self.axes.plot(xdata, ydata, color=self.options.green_color))
         self.fills[1].set_color(self.options.red_idle_color)
         if self.options.amber:
             self.fills[2].set_color(self.options.amber_idle_color)
