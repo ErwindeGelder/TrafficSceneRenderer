@@ -6,8 +6,9 @@ Author(s): Erwin de Gelder
 import numpy as np
 from matplotlib.axes import Axes
 
+from .path_follower import PathFollower
 from .polygon import Polygon
-from .utilities import rotate
+from .trailer import Trailer, TrailerOptions
 from .vehicle import Vehicle, VehicleOptions
 
 
@@ -25,10 +26,11 @@ class TruckOptions(VehicleOptions):
         color2 ((0.02, 0.02, 0.02)): Secondary color of the truck.
         color3 ((0.2, 0.2, 0.2)): Tertiary color of the truck.
         trailer (False): Whether the truck has a trailer.
-        l_trailer (9.0): Distance front trailer towards pivot point.
+        l_trailer (9.0): Length of the trailer.
         w_trailer (None): Width of trailer (by default, same as width truck).
         l_pivot_truck (1.2): Distance center truck towards pivot point.
         l_pivot_trailer (0.7): Distance front trailer towards pivot point.
+        l_pivot_trailer_back(1.4): Distance back trailer towards pivot point.
         edgecolor ((0, 0, 0)): In case of a non-transparent truck, the color of
             the lines is set using this option.
         layer (2): The layer in which the truck will be plotted.
@@ -44,6 +46,7 @@ class TruckOptions(VehicleOptions):
     w_trailer: float = 0
     l_pivot_truck: float = 1.2
     l_pivot_trailer: float = 0.7
+    l_pivot_trailer_back: float = 1.4
 
     def __init__(self, **kwargs: bool | float | tuple[float, float, float]) -> None:
         """Class containing all kinds of options for a truck.
@@ -66,16 +69,17 @@ class Truck(Vehicle):
         axes (Axes): The axes that is used for plotting.
     """
 
-    def __init__(self, axes: Axes, options: TruckOptions | None = None) -> None:
+    def __init__(self, axes: Axes, options: TruckOptions | None = None, path_follower: PathFollower | None = None) -> None:
         """Create a truck, possibly with a trailer.
 
         :param axes: The axes on which the truck must be plotted.
         :param options: Any options for configuring the truck.
+        :param path_follower: An optional path follower for the truck.
         """
         if options is None:
             options = TruckOptions()
-        self.trailer_angle = 0.0
-        Vehicle.__init__(self, axes, options)
+        self.trailer = None  # type: TruckTrailer | None
+        Vehicle.__init__(self, axes, options, path_follower)
         self.options: TruckOptions
 
     def plot_vehicle(self) -> None:
@@ -293,40 +297,97 @@ class Truck(Vehicle):
 
         # Plot the trailer.
         if self.options.trailer:
-            y_truck = (
-                self.options.l_pivot_trailer
-                - self.options.l_pivot_truck
-                - self.options.l_trailer / 2
+            trailer_options = TrailerOptions(
+                length=self.options.l_trailer,
+                width=self.options.w_trailer,
+                color=self.options.color,
+                edgecolor=self.options.edgecolor,
+                layer=self.options.layer + 1,
+                front_pivot=1 - self.options.l_pivot_trailer / self.options.l_trailer,
+                rear_pivot=self.options.l_pivot_trailer_back / self.options.l_trailer,
             )
-            xdata = np.array([-1, 1, 1, -1]) * self.options.w_trailer / 2
-            ydata = np.array([1, 1, -1, -1]) * self.options.l_trailer / 2 + y_truck
-            self.fills += (
-                Polygon(
-                    self.axes,
-                    xdata,
-                    ydata,
-                    facecolor=self.options.color,
-                    edgecolor=self.options.edgecolor,
-                    linewidth=self.options.line_width,
-                    zorder=self.options.layer + 1,
-                ),
-            )
+            self.trailer = TruckTrailer(self.axes, trailer_options)
+
+    def change_pos(self, x_center: float, y_center: float, angle: float = 0) -> None:
+        """Change the position of the truck.
+
+        :param x_center: The new x-coordinate of the truck.
+        :param y_center: The new y-coordinate of the truck.
+        :param angle: The new angle of the truck.
+        """
+        Vehicle.change_pos(self, x_center, y_center, angle)
+        if self.trailer:
+            self.trailer.set_front_pivot(self.get_pivot_x(), self.get_pivot_y(), angle)
+
+    def get_pivot_x(self) -> float:
+        """Return the x-coordinate of the pivot of the truck where the trailer is attached.
+
+        :return: The x-coordinate of the pivot of the truck where the trailer is attached.
+        """
+        return self.position.x_center - np.sin(self.position.angle) * self.options.l_pivot_truck
+
+    def get_pivot_y(self) -> float:
+        """Return the y-coordinate of the pivot of the truck where the trailer is attached.
+
+        :return: The y-coordinate of the pivot of the truck where the trailer is attached.
+        """
+        return self.position.y_center - np.cos(self.position.angle) * self.options.l_pivot_truck
+
+    def change_color(
+        self,
+        face_color: tuple[float, float, float] | None = None,
+        edge_color: tuple[float, float, float] | None = None,
+    ) -> None:
+        """Change the colors of the filled areas and the plotted lines.
+
+        :param face_color: The new color of the filled area.
+        :param edge_color: The new color of the edge of the filled areas and the lines.
+        """
+        Vehicle.change_color(self, face_color, edge_color)
+        if self.trailer:
+            self.trailer.change_color(face_color, edge_color)
 
     def change_trailer_angle(self, angle: float) -> None:
         """Change the angle of the trailer.
 
         :param angle: The angle of the trailer wrt the truck.
         """
-        x_pivot = self.position.x_center - np.sin(self.position.angle) * self.options.l_pivot_truck
-        y_pivot = self.position.y_center - np.cos(self.position.angle) * self.options.l_pivot_truck
-        xy_data = self.fills[-1].get_xy() - [x_pivot, y_pivot]
-        xy_data[:, 0], xy_data[:, 1] = rotate(
-            xy_data[:, 0], xy_data[:, 1], self.position.angle + self.trailer_angle
+        if self.trailer is not None:
+            xpos, ypos = self.trailer.get_front_pivot_x(), self.trailer.get_front_pivot_y()
+            self.trailer.set_front_pivot(xpos, ypos, self.position.angle + angle)
+
+    def move_vehicle(self, stepsize: float) -> None:
+        """Move the truck a tiny bit and return new coordinates.
+
+        This is only possible if self.path_follower is defined.
+
+        :param stepsize: The distance to move the truck.
+        """
+        if self.path_follower is None:
+            msg = "PathFollower is not defined for this vehicle."
+            raise ValueError(msg)
+
+        xpos, ypos, angle = self.path_follower.move_vehicle(stepsize)
+        Vehicle.change_pos(self, xpos, ypos, angle)
+        if self.trailer:
+            self.trailer.update_pos(self.get_pivot_x(), self.get_pivot_y())
+
+
+class TruckTrailer(Trailer):
+    """Class for a trailer of a truck."""
+
+    def plot_vehicle(self) -> None:
+        """Plot the trailer of the truck."""
+        xdata = np.array([-1, 1, 1, -1]) * self.options.width / 2
+        ydata = np.array([1, 1, -1, -1]) * self.options.length / 2
+        self.fills += (
+            Polygon(
+                self.axes,
+                xdata,
+                ydata,
+                facecolor=self.options.color,
+                edgecolor=self.options.edgecolor,
+                linewidth=self.options.line_width,
+                zorder=self.options.layer + 1,
+            ),
         )
-        xy_data[:, 0], xy_data[:, 1] = rotate(
-            xy_data[:, 0], xy_data[:, 1], -self.position.angle - angle
-        )
-        xy_data[:, 0] += x_pivot
-        xy_data[:, 1] += y_pivot
-        self.fills[-1].set_xy(xy_data)
-        self.trailer_angle = angle
