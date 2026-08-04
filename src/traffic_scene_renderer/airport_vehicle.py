@@ -42,8 +42,8 @@ class AirportVehicleOptions(CarOptions):
     length_trailer_b: float = 2.0
     width_trailer: float = 1.5
     color: tuple[float, float, float] = (1.0, 0.8, 0.05)
-    color2: tuple[float, float, float] = None
-    color3: tuple[float, float, float] = None
+    color2: tuple[float, float, float] | None = None
+    color3: tuple[float, float, float] | None = None
     window_color: tuple[float, float, float] = (0.6, 0.85, 0.92)
     n_trailers: int = 0
     luminance_diff: float = -0.3
@@ -60,7 +60,10 @@ class AirportVehicle(Car):
     """
 
     def __init__(
-        self, axes: Axes, options: AirportVehicleOptions = None, path_follower: PathFollower = None
+        self,
+        axes: Axes,
+        options: AirportVehicleOptions | None = None,
+        path_follower: PathFollower | None = None,
     ) -> None:
         """Initialize an airport vehicle.
 
@@ -70,9 +73,10 @@ class AirportVehicle(Car):
         """
         if options is None:
             options = AirportVehicleOptions()
+        self.options: AirportVehicleOptions
         if options.color3 is None:
             options.color3 = options.color
-        self.trailers = []
+        self.trailers = []  # type: list[Trailer]
         Car.__init__(self, axes, options, path_follower)
 
         if self.options.n_trailers:
@@ -126,9 +130,9 @@ class AirportVehicle(Car):
 
         # Plot some lines
         for xdata, ydata in (
-            ([-0.45, -0.45], [0.45, 0.1]),
-            ([0.45, 0.45], [0.45, 0.1]),
-            ([-0.5, 0.5], [0.1, 0.1]),
+            (np.array([-0.45, -0.45]), np.array([0.45, 0.1])),
+            (np.array([0.45, 0.45]), np.array([0.45, 0.1])),
+            (np.array([-0.5, 0.5]), np.array([0.1, 0.1])),
         ):
             self.plots += (
                 self.axes.plot(
@@ -142,7 +146,7 @@ class AirportVehicle(Car):
 
         # Plot baggage area
         xdata = np.array([0.45, 0.45, -0.45, -0.45]) * self.options.width
-        ydata = np.array([0, -0.45, -0.45, 0]) * self.options.length
+        ydata = np.array([0., -0.45, -0.45, 0.]) * self.options.length
         self.fills += (
             Polygon(
                 self.axes,
@@ -189,6 +193,9 @@ class AirportVehicle(Car):
 
         :param stepsize: The distance to move the vehicle.
         """
+        if self.path_follower is None:
+            msg = "PathFollower is not defined for this vehicle."
+            raise ValueError(msg)
         xpos, ypos, angle = self.path_follower.move_vehicle(stepsize)
         Car.change_pos(self, xpos, ypos, angle)
         if self.trailers:

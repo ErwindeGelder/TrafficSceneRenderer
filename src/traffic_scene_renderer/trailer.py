@@ -36,11 +36,12 @@ class TrailerOptions(VehicleOptions):
 class Trailer(Vehicle, ABC):
     """The default class for a trailer."""
 
-    def __init__(self, axes: Axes, options: TrailerOptions = None) -> None:
+    def __init__(self, axes: Axes, options: TrailerOptions | None = None) -> None:
         """Initialize a trailer."""
         if options is None:
             options = TrailerOptions()
         Vehicle.__init__(self, axes, options)
+        self.options: TrailerOptions
 
     def set_front_pivot(self, xpos: float, ypos: float, angle: float) -> None:
         """Change the position such that the front pivot is at the set position.
