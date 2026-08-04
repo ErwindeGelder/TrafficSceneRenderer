@@ -35,15 +35,16 @@ class AirportVehicleOptions(CarOptions):
             between color2 and color.
         layer (2): The layer in which the ambulance will be plotted.
     """
+
     length: float = 2.9
     width: float = 1.36
     length_trailer_a: float = 1.0
     length_trailer_b: float = 2.0
     width_trailer: float = 1.5
-    color: tuple[float, float, float] = (1., .8, .05)
+    color: tuple[float, float, float] = (1.0, 0.8, 0.05)
     color2: tuple[float, float, float] = None
     color3: tuple[float, float, float] = None
-    window_color: tuple[float, float, float] = (.6, .85, .92)
+    window_color: tuple[float, float, float] = (0.6, 0.85, 0.92)
     n_trailers: int = 0
     luminance_diff: float = -0.3
 
@@ -58,8 +59,9 @@ class AirportVehicle(Car):
         axes (Axes): The axes that is used for plotting.
     """
 
-    def __init__(self, axes: Axes, options: AirportVehicleOptions = None,
-                 path_follower: PathFollower = None) -> None:
+    def __init__(
+        self, axes: Axes, options: AirportVehicleOptions = None, path_follower: PathFollower = None
+    ) -> None:
         """Initialize an airport vehicle.
 
         :param axes: Axes on which the airport vehicle has to be plotted.
@@ -74,29 +76,35 @@ class AirportVehicle(Car):
         Car.__init__(self, axes, options, path_follower)
 
         if self.options.n_trailers:
-            options_a = TrailerOptions(length=self.options.length_trailer_a,
-                                       width=self.options.width_trailer,
-                                       color=self.options.edgecolor,
-                                       edgecolor=self.options.edgecolor,
-                                       layer=self.options.layer)
-            options_b = TrailerOptions(length=self.options.length_trailer_b,
-                                       width=self.options.width_trailer,
-                                       color=self.options.color3,
-                                       edgecolor=self.options.edgecolor,
-                                       layer=self.options.layer+1,
-                                       front_pivot=0.9, rear_pivot=0.1)
+            options_a = TrailerOptions(
+                length=self.options.length_trailer_a,
+                width=self.options.width_trailer,
+                color=self.options.edgecolor,
+                edgecolor=self.options.edgecolor,
+                layer=self.options.layer,
+            )
+            options_b = TrailerOptions(
+                length=self.options.length_trailer_b,
+                width=self.options.width_trailer,
+                color=self.options.color3,
+                edgecolor=self.options.edgecolor,
+                layer=self.options.layer + 1,
+                front_pivot=0.9,
+                rear_pivot=0.1,
+            )
             for _ in range(self.options.n_trailers):
                 self.trailers.append(AirportTrailerA(axes, options_a))
                 self.trailers.append(AirportTrailerB(axes, options_b))
 
-            self.change_pos(self.options.x_position_init, self.options.y_position_init,
-                            self.options.angle_init)
+            self.change_pos(
+                self.options.x_position_init, self.options.y_position_init, self.options.angle_init
+            )
 
     def _determine_color2(self) -> tuple[float, float, float]:
         """If defined, just return color2. If not, return darker version of color."""
         if self.options.color2 is None:
             hue, saturation, luminance = rgb2hsl(*self.options.color)
-            luminance = min(1.0, max(0.0, luminance+self.options.luminance_diff))
+            luminance = min(1.0, max(0.0, luminance + self.options.luminance_diff))
             return hsl2rgb(hue, saturation, luminance)
         return self.options.color2
 
@@ -105,30 +113,60 @@ class AirportVehicle(Car):
         # Plot the vehicle
         xdata = np.array([0.5, 0.5, -0.5, -0.5]) * self.options.width
         ydata = np.array([0.5, -0.5, -0.5, 0.5]) * self.options.length
-        self.fills += (Polygon(self.axes, xdata, ydata, facecolor=self.options.color,
-                               edgecolor=self.options.edgecolor, zorder=self.options.layer),)
+        self.fills += (
+            Polygon(
+                self.axes,
+                xdata,
+                ydata,
+                facecolor=self.options.color,
+                edgecolor=self.options.edgecolor,
+                zorder=self.options.layer,
+            ),
+        )
 
         # Plot some lines
-        for xdata, ydata in (([-0.45, -0.45], [0.45, 0.1]),
-                             ([0.45, 0.45], [0.45, 0.1]),
-                             ([-0.5, 0.5], [0.1, 0.1])):
-            self.plots += (self.axes.plot(np.array(xdata) * self.options.width,
-                                          np.array(ydata) * self.options.length,
-                                          color=self.options.edgecolor,
-                                          linewidth=self.options.line_width,
-                                          zorder=self.options.layer)[0],)
+        for xdata, ydata in (
+            ([-0.45, -0.45], [0.45, 0.1]),
+            ([0.45, 0.45], [0.45, 0.1]),
+            ([-0.5, 0.5], [0.1, 0.1]),
+        ):
+            self.plots += (
+                self.axes.plot(
+                    np.array(xdata) * self.options.width,
+                    np.array(ydata) * self.options.length,
+                    color=self.options.edgecolor,
+                    linewidth=self.options.line_width,
+                    zorder=self.options.layer,
+                )[0],
+            )
 
         # Plot baggage area
         xdata = np.array([0.45, 0.45, -0.45, -0.45]) * self.options.width
         ydata = np.array([0, -0.45, -0.45, 0]) * self.options.length
-        self.fills += (Polygon(self.axes, xdata, ydata, facecolor=self._determine_color2(),
-                               edgecolor=self.options.edgecolor, zorder=self.options.layer),)
+        self.fills += (
+            Polygon(
+                self.axes,
+                xdata,
+                ydata,
+                facecolor=self._determine_color2(),
+                edgecolor=self.options.edgecolor,
+                zorder=self.options.layer,
+            ),
+        )
 
         # Plot window
         xdata = np.array([0.45, 0.45, -0.45, -0.45]) * self.options.width
         ydata = np.array([0.45, 0.37, 0.37, 0.45]) * self.options.length
-        self.fills += (Polygon(self.axes, xdata, ydata, facecolor=self.options.window_color,
-                               edgecolor=self.options.edgecolor, zorder=self.options.layer),)
+        self.fills += (
+            Polygon(
+                self.axes,
+                xdata,
+                ydata,
+                facecolor=self.options.window_color,
+                edgecolor=self.options.edgecolor,
+                zorder=self.options.layer,
+            ),
+        )
 
     def change_pos(self, x_center: float, y_center: float, angle: float = 0) -> None:
         """Change the position of the static object.
@@ -168,32 +206,67 @@ class AirportTrailerA(Trailer):
         # The tires
         xdata = np.array([0.42, 0.42, 0.5, 0.5]) * self.options.width
         ydata = np.array([-0.7, -0.3, -0.3, -0.7]) * self.options.length
-        self.fills += (Polygon(self.axes, xdata, ydata, facecolor=self.options.color,
-                               edgecolor=None, zorder=self.options.layer),
-                       Polygon(self.axes, -xdata, ydata, facecolor=self.options.color,
-                               edgecolor=None, zorder=self.options.layer))
+        self.fills += (
+            Polygon(
+                self.axes,
+                xdata,
+                ydata,
+                facecolor=self.options.color,
+                edgecolor=None,
+                zorder=self.options.layer,
+            ),
+            Polygon(
+                self.axes,
+                -xdata,
+                ydata,
+                facecolor=self.options.color,
+                edgecolor=None,
+                zorder=self.options.layer,
+            ),
+        )
 
         # Rear axle
         xdata = np.array([-0.42, 0.42]) * self.options.width
         ydata = np.array([-0.5, -0.5]) * self.options.length
-        self.plots += (self.axes.plot(xdata, ydata, color=self.options.edgecolor,
-                                      linewidth=self.options.line_width,
-                                      zorder=self.options.layer)[0],)
+        self.plots += (
+            self.axes.plot(
+                xdata,
+                ydata,
+                color=self.options.edgecolor,
+                linewidth=self.options.line_width,
+                zorder=self.options.layer,
+            )[0],
+        )
 
         # Connection to front
         xdata = np.array([-0.2, 0.0, 0.2]) * self.options.width
         ydata = np.array([-0.5, 0.5, -0.5]) * self.options.length
-        self.plots += (self.axes.plot(xdata, ydata, color=self.options.edgecolor,
-                                      linewidth=self.options.line_width,
-                                      zorder=self.options.layer)[0],)
+        self.plots += (
+            self.axes.plot(
+                xdata,
+                ydata,
+                color=self.options.edgecolor,
+                linewidth=self.options.line_width,
+                zorder=self.options.layer,
+            )[0],
+        )
 
 
 class AirportTrailerB(Trailer):
     """Second part of the airport vehicle trailer."""
+
     def plot_vehicle(self) -> None:
         """Plot the second part of the airport vehicle."""
         # Just a big square
         xdata = np.array([0.5, 0.5, -0.5, -0.5]) * self.options.width
         ydata = np.array([0.5, -0.5, -0.5, 0.5]) * self.options.length
-        self.fills += (Polygon(self.axes, xdata, ydata, facecolor=self.options.color,
-                               edgecolor=self.options.edgecolor, zorder=self.options.layer),)
+        self.fills += (
+            Polygon(
+                self.axes,
+                xdata,
+                ydata,
+                facecolor=self.options.color,
+                edgecolor=self.options.edgecolor,
+                zorder=self.options.layer,
+            ),
+        )

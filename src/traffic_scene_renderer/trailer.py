@@ -28,6 +28,7 @@ class TrailerOptions(VehicleOptions):
             connects with the front vehicle.
         rear_pivot (0): The relative point (1-front, 0=rear) of the rear axle.
     """
+
     front_pivot: float = 1
     rear_pivot: float = 0
 
@@ -58,16 +59,18 @@ class Trailer(Vehicle, ABC):
 
         :return: The x-coordinate of the rear pivot of the trailer.
         """
-        return self.position.x_center + \
-            self.options.length*np.sin(self.position.angle)*(self.options.rear_pivot-0.5)
+        return self.position.x_center + self.options.length * np.sin(self.position.angle) * (
+            self.options.rear_pivot - 0.5
+        )
 
     def get_rearpivot_y(self) -> float:
         """Return the y-coordinate of the rear pivot of the trailer.
 
         :return: The y-coordinate of the rear pivot of the trailer.
         """
-        return self.position.y_center + \
-            self.options.length*np.cos(self.position.angle)*(self.options.rear_pivot-0.5)
+        return self.position.y_center + self.options.length * np.cos(self.position.angle) * (
+            self.options.rear_pivot - 0.5
+        )
 
     def update_pos(self, xpos: float, ypos: float) -> None:
         """Update position based on updated position of front object.
@@ -77,21 +80,25 @@ class Trailer(Vehicle, ABC):
         """
         # Compute the required distance from the new point (xpos, ypos) to the rear pivot, which is
         # the same as the distance between the front and rear pivot point.
-        required_distance = (self.options.front_pivot-self.options.rear_pivot) * self.options.length
+        required_distance = (
+            self.options.front_pivot - self.options.rear_pivot
+        ) * self.options.length
 
         # Compute the distance that the rear pivot point should travel in the direction of the
         # trailer such that it ends up at the required distance. This is computed using quadratic
         # solving using the abc-formula. The smaller solution is the right one - this works if the
         # step is not too big.
         xrearpivot, yrearpivot = self.get_rearpivot_x(), self.get_rearpivot_y()
-        quadratic_b = 2*((xrearpivot-xpos)*np.sin(self.position.angle) +
-                         (yrearpivot-ypos)*np.cos(self.position.angle))
-        quadratic_c = (xrearpivot - xpos)**2 + (yrearpivot - ypos)**2 - required_distance**2
-        move_distance = (-quadratic_b - np.sqrt(quadratic_b**2-4*quadratic_c)) / 2
+        quadratic_b = 2 * (
+            (xrearpivot - xpos) * np.sin(self.position.angle)
+            + (yrearpivot - ypos) * np.cos(self.position.angle)
+        )
+        quadratic_c = (xrearpivot - xpos) ** 2 + (yrearpivot - ypos) ** 2 - required_distance**2
+        move_distance = (-quadratic_b - np.sqrt(quadratic_b**2 - 4 * quadratic_c)) / 2
 
         # Update the position of the rear pivot point.
-        xrearpivot += move_distance*np.sin(self.position.angle)
-        yrearpivot += move_distance*np.cos(self.position.angle)
+        xrearpivot += move_distance * np.sin(self.position.angle)
+        yrearpivot += move_distance * np.cos(self.position.angle)
 
         # Compute the new angle and change the position of the trailer accordingly.
         new_angle = np.arctan2(xpos - xrearpivot, ypos - yrearpivot)
