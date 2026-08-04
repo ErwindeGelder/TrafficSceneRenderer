@@ -3,6 +3,7 @@
 Author(s): Erwin de Gelder
 """
 
+from .airport_vehicle import AirportVehicle, AirportVehicleOptions
 from .ambulance import Ambulance, AmbulanceOptions
 from .arrow import arrow
 from .bus import Bus, BusOptions
