@@ -187,11 +187,11 @@ class AirportVehicle(Car):
                 xpos, ypos = trailer.get_rear_x(), trailer.get_rear_y()
 
     def move_vehicle(self, stepsize: float) -> None:
-        """Move the vehicle a tiny bit and return new coordinates.
+        """Move the airport vehicle a tiny bit and return new coordinates.
 
         This is only possible if self.path_follower is defined.
 
-        :param stepsize: The distance to move the vehicle.
+        :param stepsize: The distance to move the airport vehicle.
         """
         if self.path_follower is None:
             msg = "PathFollower is not defined for this vehicle."
