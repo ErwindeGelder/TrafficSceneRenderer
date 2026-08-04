@@ -69,7 +69,12 @@ class Truck(Vehicle):
         axes (Axes): The axes that is used for plotting.
     """
 
-    def __init__(self, axes: Axes, options: TruckOptions | None = None, path_follower: PathFollower | None = None) -> None:
+    def __init__(
+        self,
+        axes: Axes,
+        options: TruckOptions | None = None,
+        path_follower: PathFollower | None = None,
+    ) -> None:
         """Create a truck, possibly with a trailer.
 
         :param axes: The axes on which the truck must be plotted.
