@@ -146,7 +146,7 @@ class AirportVehicle(Car):
 
         # Plot baggage area
         xdata = np.array([0.45, 0.45, -0.45, -0.45]) * self.options.width
-        ydata = np.array([0., -0.45, -0.45, 0.]) * self.options.length
+        ydata = np.array([0.0, -0.45, -0.45, 0.0]) * self.options.length
         self.fills += (
             Polygon(
                 self.axes,
