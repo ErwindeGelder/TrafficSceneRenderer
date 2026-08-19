@@ -7,6 +7,7 @@ import numpy as np
 from matplotlib.axes import Axes
 
 from .bus import Bus, BusOptions
+from .path_follower import PathFollower
 from .polygon import Polygon
 
 
@@ -52,17 +53,24 @@ class Ambulance(Bus):
     Attributes:
         options (TruckOptions): All options. For a detailed description, see above.
         axes (Axes): The axes that is used for plotting.
+        path_follower (PathFollower): Optional object, used when vehicle needs to follow a path.
     """
 
-    def __init__(self, axes: Axes, options: AmbulanceOptions | None = None) -> None:
+    def __init__(
+        self,
+        axes: Axes,
+        options: AmbulanceOptions | None = None,
+        path_follower: PathFollower | None = None,
+    ) -> None:
         """Create an ambulance.
 
         :param axes: Axes on which the ambulance has to be plotted.
         :param options: Options for configuring the appearance of the ambulance.
+        :param path_follower: Path that the ambulance needs to follow (if any).
         """
         if options is None:
             options = AmbulanceOptions()
-        Bus.__init__(self, axes, options)
+        Bus.__init__(self, axes, options, path_follower)
         self.options: AmbulanceOptions
 
     def plot_vehicle(self) -> None:
